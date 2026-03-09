@@ -6,6 +6,16 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   build: {
     outDir: 'build',
+    rollupOptions: {
+      input: {
+        main:     path.resolve(__dirname, 'index.html'),
+        landing:  path.resolve(__dirname, 'landing.html'),
+        guide:    path.resolve(__dirname, 'guide.html'),
+        install:  path.resolve(__dirname, 'install.html'),
+        advanced: path.resolve(__dirname, 'advanced.html'),
+        faq:      path.resolve(__dirname, 'faq.html'),
+      },
+    },
   },
   plugins: [
     // The React and Tailwind plugins are both required for Make, even if
