@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(file /Users/al02507354/Desktop/origins-krabs-main/*.html)",
+      "Bash(wc -l /Users/al02507354/Desktop/origins-krabs-main/*.html)",
+      "Bash(grep -o \"#[0-9a-fA-F]\\\\{6\\\\}\\\\|rgba\\([^\\)]*\\)\\\\|rgb\\([^\\)]*\\)\" /Users/al02507354/Desktop/origins-krabs-main/*.html)"
+    ]
+  }
+}

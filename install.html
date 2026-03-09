@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VPS 安裝教學 — 大閘蟹 AI 助理</title>
+  <meta name="description" content="從一台全新 VPS 到完整運行的大閘蟹 AI 助理，手把手完整安裝教學。" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+HK:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { font-family: 'Space Grotesk', 'Noto Sans HK', sans-serif; }
+    :root {
+      --lime: #C8FF00;
+      --orange: #FF4D00;
+      --black: #000;
+      --border: #1a1a1a;
+      --card: #0d0d0d;
+      --gray: #888;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: #000; color: #fff; }
+    .lime { color: #C8FF00; }
+    .orange { color: #FF4D00; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    /* Mobile drawer */
+    #mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
+    #mobile-menu.open { transform: translateX(0); }
+    /* Logo float */
+    @keyframes logoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    .logo-float { animation: logoFloat 2.8s ease-in-out infinite; }
+    /* Inline code */
+    code {
+      font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+      font-size: 0.82em;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      padding: 0.12em 0.45em;
+      color: #C8FF00;
+    }
+    /* Step number style */
+    .step-tag {
+      font-size: clamp(3rem, 7vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: #1a1a1a;
+    }
+    /* Syntax highlight helpers */
+    .sh-c { color: #555; }
+    .sh-k { color: #C8FF00; }
+    .sh-s { color: #aaa; }
+    .sh-v { color: #888; }
+  </style>
+</head>
+<body class="overflow-x-hidden">
+
+<!-- ═══ HEADER ═══ -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-black/95 border-b border-[#1a1a1a]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-14">
+      <a href="./index.html" class="flex items-center gap-2 select-none tracking-tight">
+        <svg width="111" height="93" viewBox="0 0 111 93" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-float" style="height:38px;width:auto;">
+          <rect x="29" y="23" width="50" height="63" fill="#E63B35"/><rect x="74" y="23" width="5" height="63" fill="#B52C27"/><rect x="91" y="29" width="5" height="8" fill="#B52C27"/><path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/><path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/><rect x="18" y="29" width="8" height="8" fill="#B52C27"/><path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/><rect x="16" y="29" width="8" height="8" fill="#E63B35"/><path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/><rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/><rect x="34" y="86" width="12" height="7" fill="#E63B35"/><rect x="62" y="86" width="12" height="7" fill="#E63B35"/><rect x="40" y="6" width="8" height="17" fill="#E63B35"/><rect x="40" y="6" width="6" height="13" fill="black"/><rect x="41" y="7" width="3" height="7" fill="white"/><rect x="60" y="6" width="8" height="17" fill="#E63B35"/><rect x="60" y="6" width="6" height="13" fill="black"/><rect x="61" y="7" width="3" height="7" fill="white"/>
+        </svg>
+        <span class="text-white font-black text-2xl">大閘蟹</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#666]">
+        <a href="./index.html#scenarios" class="hover:text-white transition-colors">使用情境</a>
+        <a href="./index.html#features" class="hover:text-white transition-colors">功能</a>
+        <a href="./index.html#pricing" class="hover:text-white transition-colors">方案</a>
+        <a href="./guide.html" class="hover:text-white transition-colors">步驟教學</a>
+        <a href="./install.html" class="text-white font-bold inline-flex items-center gap-1">安裝教學<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+        <a href="./advanced.html" class="hover:text-white transition-colors">進階功能</a>
+        <a href="./faq.html" class="hover:text-white transition-colors">常見問題</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="./index.html#pricing" class="hidden md:inline-flex items-center gap-1 bg-[#C8FF00] text-black text-sm font-black px-5 py-2 hover:bg-[#d9ff33] transition-colors tracking-tight">查看方案 ↗</a>
+        <button id="hamburger-btn" class="md:hidden p-2" aria-label="Menu">
+          <svg id="icon-hamburger" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg id="icon-close" class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Drawer -->
+<div id="mobile-menu" class="fixed top-0 right-0 bottom-0 w-72 bg-[#080808] z-40 shadow-2xl flex flex-col pt-20 px-6 pb-8 border-l border-[#1a1a1a]">
+  <nav class="flex flex-col gap-1 text-[#aaa] font-medium text-base">
+    <a href="./index.html#scenarios" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">使用情境</a>
+    <a href="./index.html#features" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">功能</a>
+    <a href="./index.html#pricing" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">方案</a>
+    <a href="./guide.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">步驟教學</a>
+    <a href="./install.html" class="mobile-link py-3 border-b border-[#1a1a1a] text-[#C8FF00] flex items-center justify-between">安裝教學<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+    <a href="./advanced.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">進階功能</a>
+    <a href="./faq.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">常見問題</a>
+  </nav>
+  <div class="mt-6">
+    <a href="./index.html#pricing" class="mobile-link block w-full text-center bg-[#C8FF00] text-black text-sm font-black px-5 py-3 hover:bg-[#d9ff33] transition-colors">查看方案 ↗</a>
+  </div>
+</div>
+<div id="drawer-overlay" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden"></div>
+
+<!-- ═══ HERO ═══ -->
+<section class="pt-14 border-b border-[#1a1a1a]">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+    <div class="reveal">
+      <div class="mb-4">
+        <span class="text-xs font-bold tracking-widest uppercase text-[#444]">SELF-HOSTED INSTALLATION</span>
+      </div>
+      <h1 class="text-5xl sm:text-7xl font-black text-white mb-6 leading-none tracking-tight">VPS<br>安裝教學</h1>
+      <p class="text-[#888] text-lg mb-10 max-w-xl leading-relaxed">
+        從一台全新 VPS 到完整運行的大閘蟹 AI 助理，手把手完整安裝教學。
+      </p>
+
+      <!-- Prerequisites box -->
+      <div class="border border-[#FF4D00]/30 bg-[#FF4D00]/5 p-5 sm:p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-[#FF4D00] text-xs font-bold tracking-widest uppercase">⚠ 開始前請確認</span>
+        </div>
+        <ul class="space-y-2.5 text-sm text-[#888]">
+          <li class="flex items-start gap-3">
+            <span class="text-[#FF4D00] font-bold mt-0.5 flex-shrink-0">—</span>
+            一台 VPS（Ubuntu 22.04 LTS 推薦，至少 1GB RAM）
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-[#FF4D00] font-bold mt-0.5 flex-shrink-0">—</span>
+            能 SSH 連線到你的伺服器
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-[#FF4D00] font-bold mt-0.5 flex-shrink-0">—</span>
+            已取得 AI API Key（如 Gemini、DeepSeek 等）
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-[#FF4D00] font-bold mt-0.5 flex-shrink-0">—</span>
+            已取得 Telegram Bot Token（向 @BotFather 申請）
+          </li>
+        </ul>
+      </div>
+
+      <!-- Step index pills -->
+      <div class="flex flex-wrap gap-2 mt-8">
+        <a href="#step1" class="text-[10px] font-bold tracking-widest uppercase border border-[#1a1a1a] text-[#555] px-3 py-1.5 hover:border-[#C8FF00]/40 hover:text-[#C8FF00] transition-colors">/01 初始設定</a>
+        <a href="#step2" class="text-[10px] font-bold tracking-widest uppercase border border-[#1a1a1a] text-[#555] px-3 py-1.5 hover:border-[#C8FF00]/40 hover:text-[#C8FF00] transition-colors">/02 Node.js</a>
+        <a href="#step3" class="text-[10px] font-bold tracking-widest uppercase border border-[#1a1a1a] text-[#555] px-3 py-1.5 hover:border-[#C8FF00]/40 hover:text-[#C8FF00] transition-colors">/03 安裝套件</a>
+        <a href="#step4" class="text-[10px] font-bold tracking-widest uppercase border border-[#1a1a1a] text-[#555] px-3 py-1.5 hover:border-[#C8FF00]/40 hover:text-[#C8FF00] transition-colors">/04 初始化設定</a>
+        <a href="#step5" class="text-[10px] font-bold tracking-widest uppercase border border-[#1a1a1a] text-[#555] px-3 py-1.5 hover:border-[#C8FF00]/40 hover:text-[#C8FF00] transition-colors">/05 安裝技能</a>
+        <a href="#step6" class="text-[10px] font-bold tracking-widest uppercase border border-[#1a1a1a] text-[#555] px-3 py-1.5 hover:border-[#C8FF00]/40 hover:text-[#C8FF00] transition-colors">/06 systemd</a>
+        <a href="#step7" class="text-[10px] font-bold tracking-widest uppercase border border-[#1a1a1a] text-[#555] px-3 py-1.5 hover:border-[#C8FF00]/40 hover:text-[#C8FF00] transition-colors">/07 測試</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STEP 1 ═══ -->
+<section class="border-b border-[#1a1a1a]" id="step1">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="reveal">
+      <!-- Step header -->
+      <div class="flex items-end gap-4 mb-8 border-b border-[#1a1a1a] pb-6">
+        <div class="step-tag">/01</div>
+        <div class="pb-2">
+          <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-1">Step 01</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">初始伺服器設定</h2>
+        </div>
+      </div>
+
+      <p class="text-[#888] mb-6 leading-relaxed">SSH 連線到你的 VPS 並更新套件列表，確保系統環境就緒。</p>
+
+      <!-- Code: SSH -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 連線到你的 VPS（替換為你的 IP）</span>
+ssh root@<span class="sh-s">YOUR_SERVER_IP</span></pre>
+        </div>
+      </div>
+
+      <!-- Code: apt update -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 更新套件列表（只更新列表，不全面升級以節省時間）</span>
+apt-get update -y</pre>
+        </div>
+      </div>
+
+      <!-- Code: install tools -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 安裝必要基礎工具</span>
+apt-get install -y curl wget git build-essential</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STEP 2 ═══ -->
+<section class="border-b border-[#1a1a1a]" id="step2">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="reveal">
+      <div class="flex items-end gap-4 mb-8 border-b border-[#1a1a1a] pb-6">
+        <div class="step-tag">/02</div>
+        <div class="pb-2">
+          <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-1">Step 02</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">安裝 Node.js 20</h2>
+        </div>
+      </div>
+
+      <p class="text-[#888] mb-6 leading-relaxed">
+        龍蝦（OpenClaw）基於 Node.js 運行，需要 Node.js 18 或以上版本。推薦使用官方 NodeSource 源安裝 Node.js 20 LTS。
+      </p>
+
+      <!-- Code: NodeSource -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 安裝 NodeSource 源</span>
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -</pre>
+        </div>
+      </div>
+
+      <!-- Code: install nodejs -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 安裝 Node.js</span>
+apt-get install -y nodejs</pre>
+        </div>
+      </div>
+
+      <!-- Code: verify -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-6">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 確認安裝成功</span>
+node --version   <span class="sh-c"># 應顯示 v20.x.x</span>
+npm --version    <span class="sh-c"># 應顯示 10.x.x</span></pre>
+        </div>
+      </div>
+
+      <!-- Callout: success -->
+      <div class="border border-[#C8FF00]/20 bg-[#C8FF00]/5 p-4 flex items-start gap-3">
+        <span class="text-[#C8FF00] flex-shrink-0 mt-0.5">✅</span>
+        <p class="text-sm text-[#888] leading-relaxed">
+          看到版本號出現就代表安裝成功。Node.js 20 LTS 是目前最穩定的選擇，支援到 2026 年 4 月。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STEP 3 ═══ -->
+<section class="border-b border-[#1a1a1a]" id="step3">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="reveal">
+      <div class="flex items-end gap-4 mb-8 border-b border-[#1a1a1a] pb-6">
+        <div class="step-tag">/03</div>
+        <div class="pb-2">
+          <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-1">Step 03</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">安裝龍蝦核心套件</h2>
+        </div>
+      </div>
+
+      <p class="text-[#888] mb-6 leading-relaxed">
+        OpenClaw 是龍蝦的核心引擎；ClaWHub 是技能管理工具，用來安裝和管理各種功能技能。
+      </p>
+
+      <!-- Code: npm install -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 全域安裝（需要 root 或 sudo）</span>
+npm install -g openclaw clawhub</pre>
+        </div>
+      </div>
+
+      <!-- Code: verify -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-6">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 確認安裝成功</span>
+openclaw --version
+clawhub --version</pre>
+        </div>
+      </div>
+
+      <!-- Callout: warning -->
+      <div class="border border-[#FF4D00]/20 bg-[#FF4D00]/5 p-4 flex items-start gap-3 mb-4">
+        <span class="text-[#FF4D00] flex-shrink-0 mt-0.5">⚠</span>
+        <div class="text-sm text-[#888] leading-relaxed">
+          <strong class="text-white">出現 EACCES 權限錯誤？</strong> 執行以下指令修正 npm prefix 後重新安裝：
+        </div>
+      </div>
+
+      <!-- Code: fix permissions -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed">npm config set prefix <span class="sh-s">'/usr/local'</span>
+npm install -g openclaw clawhub</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STEP 4 ═══ -->
+<section class="border-b border-[#1a1a1a]" id="step4">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="reveal">
+      <div class="flex items-end gap-4 mb-8 border-b border-[#1a1a1a] pb-6">
+        <div class="step-tag">/04</div>
+        <div class="pb-2">
+          <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-1">Step 04</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">初始化並設定 API Keys</h2>
+        </div>
+      </div>
+
+      <p class="text-[#888] mb-6 leading-relaxed">
+        建立設定目錄並完成龍蝦初始化設定，填入你的 AI API Key 和 Telegram Bot Token。
+      </p>
+
+      <!-- Code: mkdir -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 建立設定目錄</span>
+mkdir -p /root/.openclaw</pre>
+        </div>
+      </div>
+
+      <!-- Code: openclaw init -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-6">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 初始化設定（互動式）</span>
+openclaw init</pre>
+        </div>
+      </div>
+
+      <!-- Callout: info -->
+      <div class="border border-[#C8FF00]/20 bg-[#C8FF00]/5 p-4 flex items-start gap-3 mb-8">
+        <span class="text-[#C8FF00] flex-shrink-0 mt-0.5">💡</span>
+        <div class="text-sm text-[#888] leading-relaxed">
+          <strong class="text-white">執行後會互動式詢問你：</strong><br/>
+          · AI Provider（選擇 gemini / openai / anthropic / deepseek 等）<br/>
+          · AI API Key<br/>
+          · Telegram Bot Token<br/>
+          · 其他進階設定（可直接按 Enter 跳過）
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="flex items-center gap-4 mb-8">
+        <div class="flex-1 h-px bg-[#1a1a1a]"></div>
+        <span class="text-[#444] text-xs font-bold tracking-widest uppercase">或者手動建立設定檔</span>
+        <div class="flex-1 h-px bg-[#1a1a1a]"></div>
+      </div>
+
+      <!-- Code: manual config -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-6">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 手動建立設定檔</span>
+cat > /root/.openclaw/config.json << <span class="sh-s">'EOF'</span>
+{
+  <span class="sh-s">"ai"</span>: {
+    <span class="sh-s">"provider"</span>: <span class="sh-s">"gemini"</span>,
+    <span class="sh-s">"api_key"</span>: <span class="sh-s">"YOUR_GEMINI_API_KEY"</span>,
+    <span class="sh-s">"model"</span>: <span class="sh-s">"gemini-2.0-flash"</span>
+  },
+  <span class="sh-s">"telegram"</span>: {
+    <span class="sh-s">"bot_token"</span>: <span class="sh-s">"YOUR_BOT_TOKEN"</span>
+  },
+  <span class="sh-s">"streaming"</span>: false,
+  <span class="sh-s">"tools"</span>: {
+    <span class="sh-s">"deny"</span>: []
+  }
+}
+<span class="sh-s">EOF</span></pre>
+        </div>
+      </div>
+
+      <!-- Callout: warning -->
+      <div class="border border-[#FF4D00]/20 bg-[#FF4D00]/5 p-4 flex items-start gap-3">
+        <span class="text-[#FF4D00] flex-shrink-0 mt-0.5">⚠</span>
+        <p class="text-sm text-[#888] leading-relaxed">
+          記得將 <code>YOUR_GEMINI_API_KEY</code> 和 <code>YOUR_BOT_TOKEN</code> 替換為你實際的值。設定完成後這個檔案請妥善保管，不要公開分享。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STEP 5 ═══ -->
+<section class="border-b border-[#1a1a1a]" id="step5">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="reveal">
+      <div class="flex items-end gap-4 mb-8 border-b border-[#1a1a1a] pb-6">
+        <div class="step-tag">/05</div>
+        <div class="pb-2">
+          <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-1">Step 05</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">安裝推薦技能</h2>
+        </div>
+      </div>
+
+      <p class="text-[#888] mb-6 leading-relaxed">
+        大閘蟹建議安裝以下 9 種技能，覆蓋日常所需的搜尋、天氣、股票、加密貨幣等功能。
+      </p>
+
+      <!-- Code: install skills (no force) -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 安裝不需要 --force 的技能</span>
+clawhub install ddg-web-search weather summarize translate youtube-transcript</pre>
+        </div>
+      </div>
+
+      <!-- Code: install skills (force) -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-6">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 安裝需要 --force 的技能（VirusTotal 誤判，安全可用）</span>
+clawhub install --force skill-creator stock-info-explorer news-summary crypto-market-data</pre>
+        </div>
+      </div>
+
+      <!-- Callout: info - why --force -->
+      <div class="border border-[#C8FF00]/20 bg-[#C8FF00]/5 p-4 flex items-start gap-3 mb-6">
+        <span class="text-[#C8FF00] flex-shrink-0 mt-0.5">📦</span>
+        <div class="text-sm text-[#888] leading-relaxed">
+          <strong class="text-white">為什麼需要 --force？</strong> 部分技能的腳本可能被 VirusTotal 等安全掃描工具誤判。這些技能完全安全，加上 <code>--force</code> 旗標僅是告訴 ClaWHub 跳過安全警告繼續安裝。
+        </div>
+      </div>
+
+      <!-- Callout: warning - uv -->
+      <div class="border border-[#FF4D00]/20 bg-[#FF4D00]/5 p-4 flex items-start gap-3 mb-4">
+        <span class="text-[#FF4D00] flex-shrink-0 mt-0.5">🔧</span>
+        <div class="text-sm text-[#888] leading-relaxed">
+          <strong class="text-white">stock-info-explorer 需要額外安裝 uv（Python 環境管理工具）：</strong>
+        </div>
+      </div>
+
+      <!-- Code: install uv -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 安裝 uv（stock-info-explorer 的 Python 依賴）</span>
+curl -LsSf https://astral.sh/uv/install.sh | env HOME=/root sh
+ln -sf /root/.local/bin/uv /usr/local/bin/uv</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STEP 6 ═══ -->
+<section class="border-b border-[#1a1a1a]" id="step6">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="reveal">
+      <div class="flex items-end gap-4 mb-8 border-b border-[#1a1a1a] pb-6">
+        <div class="step-tag">/06</div>
+        <div class="pb-2">
+          <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-1">Step 06</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">設定 systemd 服務</h2>
+        </div>
+      </div>
+
+      <p class="text-[#888] mb-6 leading-relaxed">
+        透過 systemd 服務讓龍蝦在伺服器重啟後自動啟動，並在崩潰時自動重啟。
+      </p>
+
+      <!-- Code: create service file -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 建立 systemd service 檔案</span>
+cat > /etc/systemd/system/openclaw.service << <span class="sh-s">'EOF'</span>
+[Unit]
+Description=OpenClaw AI Agent
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root
+ExecStart=/usr/local/bin/openclaw start
+Restart=always
+RestartSec=10
+Environment=HOME=/root
+
+[Install]
+WantedBy=multi-user.target
+<span class="sh-s">EOF</span></pre>
+        </div>
+      </div>
+
+      <!-- Code: enable and start -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-4">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 啟用並啟動服務</span>
+systemctl daemon-reload
+systemctl enable openclaw
+systemctl start openclaw</pre>
+        </div>
+      </div>
+
+      <!-- Code: check status -->
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden mb-6">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 確認服務狀態</span>
+systemctl status openclaw</pre>
+        </div>
+      </div>
+
+      <!-- Success badge -->
+      <div class="border border-[#C8FF00]/30 bg-[#C8FF00]/5 p-4 flex items-center gap-3">
+        <span class="text-[#C8FF00]">✅</span>
+        <p class="text-sm text-[#888]">
+          看到 <code>Active: active (running)</code> 表示成功！
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STEP 7 ═══ -->
+<section class="border-b border-[#1a1a1a]" id="step7">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="reveal">
+      <div class="flex items-end gap-4 mb-8 border-b border-[#1a1a1a] pb-6">
+        <div class="step-tag">/07</div>
+        <div class="pb-2">
+          <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-1">Step 07</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">測試你的大閘蟹</h2>
+        </div>
+      </div>
+
+      <p class="text-[#888] mb-8 leading-relaxed">
+        一切設定完成後，打開 Telegram 測試你的 AI 助理是否正常運行。
+      </p>
+
+      <!-- Checklist -->
+      <div class="space-y-3 mb-10">
+        <div class="flex items-start gap-4 border border-[#1a1a1a] p-4">
+          <span class="text-[#C8FF00] font-black text-lg flex-shrink-0 leading-none mt-0.5">1</span>
+          <p class="text-sm text-[#888] leading-relaxed">打開 Telegram，搜尋你的 Bot username</p>
+        </div>
+        <div class="flex items-start gap-4 border border-[#1a1a1a] p-4">
+          <span class="text-[#C8FF00] font-black text-lg flex-shrink-0 leading-none mt-0.5">2</span>
+          <p class="text-sm text-[#888] leading-relaxed">傳送 <code>/start</code> 開始對話</p>
+        </div>
+        <div class="flex items-start gap-4 border border-[#1a1a1a] p-4">
+          <span class="text-[#C8FF00] font-black text-lg flex-shrink-0 leading-none mt-0.5">3</span>
+          <p class="text-sm text-[#888] leading-relaxed">試試說「你好」或「今天天氣如何？」</p>
+        </div>
+        <div class="flex items-start gap-4 border border-[#C8FF00]/20 bg-[#C8FF00]/5 p-4">
+          <span class="text-[#C8FF00] font-black text-lg flex-shrink-0 leading-none mt-0.5">4</span>
+          <p class="text-sm text-[#C8FF00] font-semibold leading-relaxed">如果有回應，恭喜！安裝成功 🎉</p>
+        </div>
+      </div>
+
+      <!-- Troubleshooting -->
+      <div class="mb-6">
+        <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-4">常見問題排查</div>
+        <div class="space-y-2">
+          <div class="border-l-2 border-[#FF4D00]/50 pl-4 py-2">
+            <p class="text-sm text-[#888]"><strong class="text-white">Bot 沒有回應</strong> → 確認 Bot Token 正確，確認服務正在運行（<code>systemctl status openclaw</code>）</p>
+          </div>
+          <div class="border-l-2 border-[#FF4D00]/50 pl-4 py-2">
+            <p class="text-sm text-[#888]"><strong class="text-white">API 錯誤</strong> → 確認 API Key 正確且有剩餘額度</p>
+          </div>
+          <div class="border-l-2 border-[#FF4D00]/50 pl-4 py-2">
+            <p class="text-sm text-[#888]"><strong class="text-white">服務崩潰</strong> → 查看日誌（<code>journalctl -u openclaw -f</code>）</p>
+          </div>
+          <div class="border-l-2 border-[#FF4D00]/50 pl-4 py-2">
+            <p class="text-sm text-[#888]"><strong class="text-white">權限問題</strong> → 確認以 root 身份執行，或使用 sudo</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code: logs -->
+      <div class="text-xs font-bold tracking-widest uppercase text-[#444] mb-4">查看日誌</div>
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-[#1a1a1a]">
+          <span class="text-[#444] text-xs font-mono tracking-wider">bash</span>
+          <button class="copy-btn text-[#555] text-xs hover:text-[#C8FF00] transition-colors font-mono">複製</button>
+        </div>
+        <div class="p-4 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 查看即時日誌</span>
+journalctl -u openclaw -f
+
+<span class="sh-c"># 查看最近 100 行日誌</span>
+journalctl -u openclaw -n 100</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="py-20 px-4 border-b border-[#1a1a1a]">
+  <div class="max-w-4xl mx-auto">
+    <div class="reveal border border-[#1a1a1a] p-8 sm:p-12">
+      <div class="mb-3">
+        <span class="text-xs font-bold tracking-widest uppercase text-[#444]">NEXT STEPS</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">
+        設定完成！<span class="text-[#C8FF00]">接下來呢？</span>
+      </h2>
+      <p class="text-[#888] text-lg mb-10 leading-relaxed max-w-xl">
+        探索更多進階功能，或回到首頁查看更多使用情境。
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="./advanced.html"
+          class="inline-flex items-center justify-center gap-2 bg-[#C8FF00] text-black text-sm font-black px-8 py-4 hover:bg-[#d9ff33] transition-colors tracking-tight">
+          進階功能 →
+        </a>
+        <a href="./index.html"
+          class="inline-flex items-center justify-center gap-2 border border-[#1a1a1a] text-[#888] text-sm font-black px-8 py-4 hover:border-[#888] hover:text-white transition-colors tracking-tight">
+          返回首頁
+        </a>
+        <a href="./faq.html"
+          class="inline-flex items-center justify-center gap-2 border border-[#1a1a1a] text-[#888] text-sm font-black px-8 py-4 hover:border-[#888] hover:text-white transition-colors tracking-tight">
+          常見問題
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="bg-black border-t border-[#1a1a1a] text-[#888] py-14">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-3 gap-10 mb-10">
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-2 mb-4">
+          <svg width="111" height="93" viewBox="0 0 111 93" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;">
+            <rect x="29" y="23" width="50" height="63" fill="#E63B35"/><rect x="74" y="23" width="5" height="63" fill="#B52C27"/><rect x="91" y="29" width="5" height="8" fill="#B52C27"/><path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/><path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/><rect x="18" y="29" width="8" height="8" fill="#B52C27"/><path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/><rect x="16" y="29" width="8" height="8" fill="#E63B35"/><path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/><rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/><rect x="34" y="86" width="12" height="7" fill="#E63B35"/><rect x="62" y="86" width="12" height="7" fill="#E63B35"/><rect x="40" y="6" width="8" height="17" fill="#E63B35"/><rect x="40" y="6" width="6" height="13" fill="black"/><rect x="41" y="7" width="3" height="7" fill="white"/><rect x="60" y="6" width="8" height="17" fill="#E63B35"/><rect x="60" y="6" width="6" height="13" fill="black"/><rect x="61" y="7" width="3" height="7" fill="white"/>
+          </svg>
+          <span class="text-white font-black text-lg">大閘蟹</span>
+        </div>
+        <p class="text-sm leading-relaxed text-[#444]">风浪越大，蟹越贵。<br>你的專屬 AI，住在 Telegram 裡。</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-xs tracking-widest uppercase mb-5">產品</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="./index.html#features" class="hover:text-white transition-colors">功能介紹</a></li>
+          <li><a href="./index.html#pricing" class="hover:text-white transition-colors">方案價格</a></li>
+          <li><a href="./index.html#compare" class="hover:text-white transition-colors">對比分析</a></li>
+          <li><a href="./index.html#scenarios" class="hover:text-white transition-colors">使用情境</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-xs tracking-widest uppercase mb-5">幫助</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="./guide.html" class="hover:text-white transition-colors">步驟教學</a></li>
+          <li><a href="./install.html" class="text-white transition-colors">安裝教學</a></li>
+          <li><a href="./advanced.html" class="hover:text-white transition-colors">進階功能</a></li>
+          <li><a href="./faq.html" class="hover:text-white transition-colors">常見問題</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-[#1a1a1a] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-[#444]">© 2026 大閘蟹. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const overlay = document.getElementById('drawer-overlay');
+  const iconH = document.getElementById('icon-hamburger');
+  const iconC = document.getElementById('icon-close');
+  function openMenu() { mobileMenu.classList.add('open'); overlay.classList.remove('hidden'); iconH.classList.add('hidden'); iconC.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { mobileMenu.classList.remove('open'); overlay.classList.add('hidden'); iconH.classList.remove('hidden'); iconC.classList.add('hidden'); document.body.style.overflow = ''; }
+  hamburger.addEventListener('click', () => mobileMenu.classList.contains('open') ? closeMenu() : openMenu());
+  overlay.addEventListener('click', closeMenu);
+  document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMenu));
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Copy buttons
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pre = btn.closest('.bg-\\[\\#0d0d0d\\]')?.querySelector('pre');
+      if (!pre) return;
+      const text = pre.innerText || pre.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '已複製 ✓';
+        btn.style.color = '#C8FF00';
+        setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        const orig = btn.textContent;
+        btn.textContent = '已複製 ✓';
+        btn.style.color = '#C8FF00';
+        setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

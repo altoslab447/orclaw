@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>龍蝦進階功能 — 大閘蟹</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+HK:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Space Grotesk', 'Noto Sans HK', sans-serif; }
+    :root { --lime: #C8FF00; --orange: #FF4D00; --black: #000; --border: #1a1a1a; --card: #0d0d0d; --gray: #888; }
+    html { scroll-behavior: smooth; }
+    body { background: #000; color: #fff; }
+    .lime { color: #C8FF00; }
+    .orange { color: #FF4D00; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .card-hover { transition: transform 0.2s ease; }
+    .card-hover:hover { transform: translateY(-3px); }
+    #mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
+    #mobile-menu.open { transform: translateX(0); }
+    @keyframes logoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    .logo-float { animation: logoFloat 2.8s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-black text-white">
+
+<!-- ═══ HEADER ═══ -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-black/95 border-b border-[#1a1a1a]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-14">
+      <a href="./index.html" class="flex items-center gap-2 select-none tracking-tight">
+        <svg width="111" height="93" viewBox="0 0 111 93" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-float" style="height:38px;width:auto;">
+          <rect x="29" y="23" width="50" height="63" fill="#E63B35"/><rect x="74" y="23" width="5" height="63" fill="#B52C27"/><rect x="91" y="29" width="5" height="8" fill="#B52C27"/><path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/><path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/><rect x="18" y="29" width="8" height="8" fill="#B52C27"/><path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/><rect x="16" y="29" width="8" height="8" fill="#E63B35"/><path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/><rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/><rect x="34" y="86" width="12" height="7" fill="#E63B35"/><rect x="62" y="86" width="12" height="7" fill="#E63B35"/><rect x="40" y="6" width="8" height="17" fill="#E63B35"/><rect x="40" y="6" width="6" height="13" fill="black"/><rect x="41" y="7" width="3" height="7" fill="white"/><rect x="60" y="6" width="8" height="17" fill="#E63B35"/><rect x="60" y="6" width="6" height="13" fill="black"/><rect x="61" y="7" width="3" height="7" fill="white"/>
+        </svg>
+        <span class="text-white font-black text-2xl">大閘蟹</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#666]">
+        <a href="./index.html#scenarios" class="hover:text-white transition-colors">使用情境</a>
+        <a href="./index.html#features" class="hover:text-white transition-colors">功能</a>
+        <a href="./index.html#pricing" class="hover:text-white transition-colors">方案</a>
+        <a href="./guide.html" class="hover:text-white transition-colors inline-flex items-center gap-1">步驟教學<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+        <a href="./advanced.html" class="text-white font-bold inline-flex items-center gap-1">進階功能<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+        <a href="./faq.html" class="hover:text-white transition-colors inline-flex items-center gap-1">常見問題<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="./index.html#pricing" class="hidden md:inline-flex items-center gap-1 bg-[#C8FF00] text-black text-sm font-black px-5 py-2 hover:bg-[#d9ff33] transition-colors tracking-tight">查看方案 ↗</a>
+        <button id="hamburger-btn" class="md:hidden p-2" aria-label="Menu">
+          <svg id="icon-hamburger" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg id="icon-close" class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+<div id="mobile-menu" class="fixed top-0 right-0 bottom-0 w-72 bg-[#080808] z-40 shadow-2xl flex flex-col pt-20 px-6 pb-8 border-l border-[#1a1a1a]">
+  <nav class="flex flex-col gap-1 text-[#aaa] font-medium text-base">
+    <a href="./index.html#scenarios" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">使用情境</a>
+    <a href="./index.html#features" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">功能</a>
+    <a href="./index.html#pricing" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">方案</a>
+    <a href="./guide.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors flex items-center justify-between">步驟教學<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+    <a href="./advanced.html" class="mobile-link py-3 border-b border-[#1a1a1a] text-[#C8FF00] flex items-center justify-between">進階功能<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+    <a href="./faq.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors flex items-center justify-between">常見問題<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+  </nav>
+  <div class="mt-6">
+    <a href="./index.html#pricing" class="mobile-link block w-full text-center bg-[#C8FF00] text-black text-sm font-black px-5 py-3 hover:bg-[#d9ff33] transition-colors">查看方案 ↗</a>
+  </div>
+</div>
+<div id="drawer-overlay" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden"></div>
+
+<!-- ═══ HERO ═══ -->
+<section class="pt-32 pb-20 px-4 border-b border-[#1a1a1a]">
+  <div class="max-w-5xl mx-auto">
+    <div class="reveal mb-4">
+      <span class="text-xs font-bold tracking-widest uppercase text-[#888] border border-[#1a1a1a] px-3 py-1.5">ADVANCED FEATURES</span>
+    </div>
+    <h1 class="reveal text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-tight mb-6">
+      龍蝦<span class="text-[#C8FF00]">進階</span>功能
+    </h1>
+    <p class="reveal text-lg text-[#888] max-w-2xl mb-12 leading-relaxed">
+      解鎖大閘蟹的完整潛能：Session 任務拆分、技能安裝與管理
+    </p>
+
+    <!-- Quick Links -->
+    <div class="reveal grid grid-cols-1 sm:grid-cols-3 gap-px border border-[#1a1a1a]">
+      <a href="#sessions" class="bg-[#0d0d0d] border-r border-[#1a1a1a] px-6 py-5 flex items-center gap-3 hover:bg-[#111] transition-colors group">
+        <span class="text-[#C8FF00] font-black text-lg">/01</span>
+        <span class="text-[#888] group-hover:text-white transition-colors text-sm font-semibold">Session 任務拆分</span>
+      </a>
+      <a href="#install-skills" class="bg-[#0d0d0d] border-r border-[#1a1a1a] px-6 py-5 flex items-center gap-3 hover:bg-[#111] transition-colors group">
+        <span class="text-[#C8FF00] font-black text-lg">/02</span>
+        <span class="text-[#888] group-hover:text-white transition-colors text-sm font-semibold">安裝 Skills</span>
+      </a>
+      <a href="#recommended-skills" class="bg-[#0d0d0d] px-6 py-5 flex items-center gap-3 hover:bg-[#111] transition-colors group">
+        <span class="text-[#C8FF00] font-black text-lg">/03</span>
+        <span class="text-[#888] group-hover:text-white transition-colors text-sm font-semibold">推薦 Skills</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 1: SESSIONS ═══ -->
+<section id="sessions" class="py-20 px-4 border-b border-[#1a1a1a]">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Section label -->
+    <div class="reveal flex items-center gap-4 mb-12">
+      <span class="text-[#C8FF00] font-black text-sm tracking-widest">/01</span>
+      <div class="flex-1 h-px bg-[#1a1a1a]"></div>
+      <span class="text-xs font-bold tracking-widest uppercase text-[#444]">SESSION MANAGEMENT</span>
+    </div>
+
+    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">用 Session 同時處理<span class="text-[#C8FF00]">多件事</span></h2>
+    <p class="reveal text-[#888] text-lg max-w-2xl mb-14 leading-relaxed">
+      Session 是大閘蟹的核心概念，讓你像開多個瀏覽器分頁一樣，讓 AI 同時處理不同任務。
+    </p>
+
+    <!-- What is a Session -->
+    <div class="reveal mb-12">
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-6 sm:p-8">
+        <div class="flex items-start gap-4 mb-8">
+          <div class="w-10 h-10 bg-[#C8FF00] flex items-center justify-center text-black font-black text-base flex-shrink-0">?</div>
+          <div>
+            <h3 class="text-xl font-bold text-white mb-1">什麼是 Session？</h3>
+            <p class="text-[#888]">每個 Session 是一個獨立的對話上下文。</p>
+          </div>
+        </div>
+
+        <!-- Session visual diagram -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div class="border border-[#C8FF00]/30 bg-[#C8FF00]/5 p-4 relative">
+            <div class="absolute -top-2.5 left-4 bg-[#C8FF00] text-black text-[10px] font-black px-2 py-0.5">Session A</div>
+            <div class="text-sm font-bold text-white mb-1 mt-2">株式監控</div>
+            <div class="text-xs text-[#888] mb-3">持續監控 TSLA、2330 即時報價</div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 bg-[#C8FF00] inline-block animate-pulse"></span>
+              <span class="text-xs text-[#C8FF00] font-bold">Active</span>
+            </div>
+          </div>
+          <div class="border border-[#1a1a1a] bg-[#0d0d0d] p-4 relative">
+            <div class="absolute -top-2.5 left-4 bg-[#888] text-black text-[10px] font-black px-2 py-0.5">Session B</div>
+            <div class="text-sm font-bold text-white mb-1 mt-2">日常問答</div>
+            <div class="text-xs text-[#888] mb-3">翻譯、搜尋、一般對話</div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 bg-white inline-block animate-pulse"></span>
+              <span class="text-xs text-[#888] font-bold">Active</span>
+            </div>
+          </div>
+          <div class="border border-[#1a1a1a] bg-[#0d0d0d] p-4 relative">
+            <div class="absolute -top-2.5 left-4 bg-[#333] text-[#888] text-[10px] font-black px-2 py-0.5">Session C</div>
+            <div class="text-sm font-bold text-white mb-1 mt-2">資料整理</div>
+            <div class="text-xs text-[#888] mb-3">長時間資料分析任務（執行中）</div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 bg-[#FF4D00] inline-block animate-pulse"></span>
+              <span class="text-xs text-[#FF4D00] font-bold">Running</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+          <div class="border border-[#1a1a1a] p-4 text-center">
+            <div class="text-2xl mb-2">⇄</div>
+            <div class="font-bold text-white mb-1">互不干擾</div>
+            <div class="text-[#888] text-xs">各 Session 完全獨立</div>
+          </div>
+          <div class="border border-[#1a1a1a] p-4 text-center">
+            <div class="text-2xl mb-2">⚡</div>
+            <div class="font-bold text-white mb-1">同時並行</div>
+            <div class="text-[#888] text-xs">多任務同步執行</div>
+          </div>
+          <div class="border border-[#1a1a1a] p-4 text-center">
+            <div class="text-2xl mb-2">◉</div>
+            <div class="font-bold text-white mb-1">獨立記憶</div>
+            <div class="text-[#888] text-xs">各自有專屬上下文</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW TO USE -->
+    <h3 class="reveal text-2xl font-black mb-10">如何使用 Session</h3>
+
+    <!-- Step 1 -->
+    <div class="reveal mb-10">
+      <div class="flex items-center gap-4 mb-5">
+        <span class="text-[#C8FF00] font-black text-sm">01</span>
+        <h4 class="text-xl font-bold text-white">建立新 Session</h4>
+        <div class="flex-1 h-px bg-[#1a1a1a]"></div>
+      </div>
+      <div class="space-y-4 pl-10">
+        <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
+          <pre class="text-white m-0">/session new 股票監控</pre>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session new 股票監控">複製</button>
+        </div>
+        <p class="text-[#888] text-sm flex items-center gap-2">
+          <span class="text-[#C8FF00] font-bold">→</span>
+          <span>建立一個名為「股票監控」的 Session</span>
+        </p>
+        <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
+          <pre class="text-white m-0">/session new 日常助理</pre>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session new 日常助理">複製</button>
+        </div>
+        <p class="text-[#888] text-sm flex items-center gap-2">
+          <span class="text-[#C8FF00] font-bold">→</span>
+          <span>再建立一個「日常助理」Session</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="reveal mb-10">
+      <div class="flex items-center gap-4 mb-5">
+        <span class="text-[#C8FF00] font-black text-sm">02</span>
+        <h4 class="text-xl font-bold text-white">切換 Session</h4>
+        <div class="flex-1 h-px bg-[#1a1a1a]"></div>
+      </div>
+      <div class="space-y-4 pl-10">
+        <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
+          <pre class="text-white m-0">/session switch 股票監控</pre>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session switch 股票監控">複製</button>
+        </div>
+        <p class="text-[#888] text-sm flex items-center gap-2">
+          <span class="text-[#C8FF00] font-bold">→</span>
+          <span>切換到「股票監控」Session，之後的對話都在這個 Session 進行</span>
+        </p>
+        <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
+          <pre class="text-white m-0">/session list</pre>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session list">複製</button>
+        </div>
+        <p class="text-[#888] text-sm flex items-center gap-2">
+          <span class="text-[#C8FF00] font-bold">→</span>
+          <span>列出所有 Session 及其狀態</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="reveal mb-12">
+      <div class="flex items-center gap-4 mb-5">
+        <span class="text-[#C8FF00] font-black text-sm">03</span>
+        <h4 class="text-xl font-bold text-white">刪除 Session</h4>
+        <div class="flex-1 h-px bg-[#1a1a1a]"></div>
+      </div>
+      <div class="space-y-4 pl-10">
+        <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
+          <pre class="text-white m-0">/session delete 股票監控</pre>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session delete 股票監控">複製</button>
+        </div>
+        <div class="border-l-4 border-[#FF4D00] bg-[#FF4D00]/5 p-4">
+          <p class="text-[#FF4D00] text-sm font-semibold flex items-start gap-2">
+            <span class="flex-shrink-0 font-black">!</span>
+            <span>刪除 Session 會同時清除該 Session 的所有對話記憶，無法復原。重要的 Session 請謹慎刪除。</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Use Case Cards -->
+    <div class="reveal mb-12">
+      <h3 class="text-2xl font-black mb-8">實際應用範例</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <!-- Card 1 -->
+        <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+          <div class="text-[#C8FF00] font-black text-xs tracking-widest mb-4">FINANCE + DAILY</div>
+          <div class="font-black text-lg text-white mb-4">財經監控 + 日常助理分離</div>
+          <div class="space-y-2 mb-4">
+            <div class="border border-[#1a1a1a] p-3">
+              <div class="text-[10px] font-bold text-[#C8FF00] mb-1 tracking-wider">SESSION "財經"</div>
+              <div class="text-xs text-[#888]">設定每日財經早報排程、股票提醒</div>
+            </div>
+            <div class="border border-[#1a1a1a] p-3">
+              <div class="text-[10px] font-bold text-[#888] mb-1 tracking-wider">SESSION "助理"</div>
+              <div class="text-xs text-[#888]">日常問答、翻譯、摘要任務</div>
+            </div>
+          </div>
+          <div class="border-l-2 border-[#C8FF00] pl-3">
+            <div class="text-xs text-[#C8FF00]">兩者互不影響，財經排程不會被日常對話打斷</div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+          <div class="text-[#C8FF00] font-black text-xs tracking-widest mb-4">LONG TASK + INSTANT</div>
+          <div class="font-black text-lg text-white mb-4">長任務 + 即時查詢</div>
+          <div class="space-y-2 mb-4">
+            <div class="border border-[#1a1a1a] p-3">
+              <div class="text-[10px] font-bold text-[#C8FF00] mb-1 tracking-wider">SESSION "長任務"</div>
+              <div class="text-xs text-[#888]">整理大量資料、分析報告（可能需要數分鐘）</div>
+            </div>
+            <div class="border border-[#1a1a1a] p-3">
+              <div class="text-[10px] font-bold text-[#888] mb-1 tracking-wider">SESSION "即時"</div>
+              <div class="text-xs text-[#888]">同時進行其他查詢，不需等待長任務完成</div>
+            </div>
+          </div>
+          <div class="border-l-2 border-[#C8FF00] pl-3">
+            <div class="text-xs text-[#C8FF00]">不再卡在等待，多工並行</div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+          <div class="text-[#C8FF00] font-black text-xs tracking-widest mb-4">MULTI-PROJECT</div>
+          <div class="font-black text-lg text-white mb-4">多專案管理</div>
+          <div class="space-y-2 mb-4">
+            <div class="border border-[#1a1a1a] p-3">
+              <div class="text-[10px] font-bold text-[#C8FF00] mb-1 tracking-wider">SESSION "專案A"</div>
+              <div class="text-xs text-[#888]">追蹤 A 專案相關資料、待辦</div>
+            </div>
+            <div class="border border-[#1a1a1a] p-3">
+              <div class="text-[10px] font-bold text-[#888] mb-1 tracking-wider">SESSION "專案B"</div>
+              <div class="text-xs text-[#888]">追蹤 B 專案，各自有獨立記憶</div>
+            </div>
+          </div>
+          <div class="border-l-2 border-[#C8FF00] pl-3">
+            <div class="text-xs text-[#C8FF00]">就像有多個專屬助理，各司其職</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tips Box -->
+    <div class="reveal">
+      <div class="border-l-4 border-[#C8FF00] bg-[#C8FF00]/5 p-6">
+        <h4 class="font-black text-white mb-4 flex items-center gap-2">
+          <span class="text-[#C8FF00]">→</span>
+          <span>Session 使用技巧</span>
+        </h4>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3 text-[#888] text-sm">
+            <span class="text-[#C8FF00] font-black mt-0.5 flex-shrink-0">—</span>
+            <span>Session 名稱建議有意義（用途/專案名），方便記憶</span>
+          </li>
+          <li class="flex items-start gap-3 text-[#888] text-sm">
+            <span class="text-[#C8FF00] font-black mt-0.5 flex-shrink-0">—</span>
+            <span>重要 Session 不要隨意刪除，記憶會一起消失</span>
+          </li>
+          <li class="flex items-start gap-3 text-[#888] text-sm">
+            <span class="text-[#C8FF00] font-black mt-0.5 flex-shrink-0">—</span>
+            <span>切換 Session 前可以先 /session list 確認有哪些</span>
+          </li>
+          <li class="flex items-start gap-3 text-[#888] text-sm">
+            <span class="text-[#C8FF00] font-black mt-0.5 flex-shrink-0">—</span>
+            <span>排程任務建議放在獨立 Session，避免被日常對話干擾</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: INSTALL SKILLS ═══ -->
+<section id="install-skills" class="py-20 px-4 border-b border-[#1a1a1a]">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="reveal flex items-center gap-4 mb-12">
+      <span class="text-[#C8FF00] font-black text-sm tracking-widest">/02</span>
+      <div class="flex-1 h-px bg-[#1a1a1a]"></div>
+      <span class="text-xs font-bold tracking-widest uppercase text-[#444]">SKILL MANAGEMENT</span>
+    </div>
+
+    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">透過 <span class="text-[#C8FF00]">ClaWHub</span> 安裝技能</h2>
+    <p class="reveal text-[#888] text-lg max-w-2xl mb-14 leading-relaxed">
+      Skills 是大閘蟹的插件系統，讓你無限擴充 AI 的能力。
+    </p>
+
+    <!-- What is ClaWHub -->
+    <div class="reveal mb-12">
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-6 sm:p-8 flex items-start gap-5">
+        <div class="w-12 h-12 bg-[#C8FF00] flex items-center justify-center text-black font-black text-xl flex-shrink-0">🏪</div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-2">什麼是 ClaWHub？</h3>
+          <p class="text-[#888] leading-relaxed">
+            ClaWHub 是大閘蟹的技能市集，類似 App Store。你可以在 Telegram 對話中直接安裝、移除、更新技能，無需登入任何後台。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="reveal text-2xl font-black mb-10">三種安裝方式</h3>
+
+    <!-- Method 1 -->
+    <div class="reveal mb-6">
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
+        <div class="border-b border-[#1a1a1a] px-6 py-4 flex items-center gap-3">
+          <span class="text-[#C8FF00] font-black text-sm w-6">1</span>
+          <h4 class="text-white font-bold text-base">直接告訴 AI（最簡單）</h4>
+        </div>
+        <div class="p-6">
+          <p class="text-[#888] mb-6 text-sm leading-relaxed">
+            最直觀的方式：直接用自然語言告訴大閘蟹你想要什麼，它會自動幫你執行。
+          </p>
+          <div class="bg-black border border-[#1a1a1a] p-5 space-y-4 mb-6 font-mono text-sm">
+            <div class="flex items-start gap-3">
+              <span class="text-[#888] font-bold flex-shrink-0">你：</span>
+              <span class="text-[#C8FF00]">幫我安裝 stock-info-explorer 技能</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-[#888] font-bold flex-shrink-0">🦀：</span>
+              <span class="text-[#888]">好的，正在為你安裝 stock-info-explorer... 安裝完成！現在你可以問我股票價格了。</span>
+            </div>
+          </div>
+          <div class="border-l-4 border-[#888] bg-[#888]/5 p-4">
+            <p class="text-[#888] text-sm flex items-start gap-2">
+              <span class="flex-shrink-0 text-white font-bold">i</span>
+              <span>AI 會自動執行安裝並確認結果。如果有錯誤，也會自動嘗試修復。</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Method 2 -->
+    <div class="reveal mb-6">
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
+        <div class="border-b border-[#1a1a1a] px-6 py-4 flex items-center gap-3">
+          <span class="text-[#C8FF00] font-black text-sm w-6">2</span>
+          <h4 class="text-white font-bold text-base">直接在伺服器執行指令</h4>
+        </div>
+        <div class="p-6">
+          <p class="text-[#888] mb-6 text-sm leading-relaxed">
+            進階用戶可以透過 SSH 直接在伺服器執行 clawhub 指令。
+          </p>
+          <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto mb-6 relative">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[#444] text-xs">bash</span>
+              <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors" data-text="clawhub install SKILL_NAME
+clawhub install --force SKILL_NAME
+clawhub remove SKILL_NAME
+clawhub update
+clawhub list
+clawhub search KEYWORD">複製</button>
+            </div>
+            <pre class="text-white"><span class="text-[#444]"># 安裝單一技能</span>
+clawhub install SKILL_NAME
+
+<span class="text-[#444]"># 安裝需要強制安裝的技能（VirusTotal 誤判）</span>
+clawhub install --force SKILL_NAME
+
+<span class="text-[#444]"># 移除技能</span>
+clawhub remove SKILL_NAME
+
+<span class="text-[#444]"># 更新所有技能</span>
+clawhub update
+
+<span class="text-[#444]"># 列出已安裝技能</span>
+clawhub list
+
+<span class="text-[#444]"># 搜尋可用技能</span>
+clawhub search KEYWORD</pre>
+          </div>
+          <div class="border-l-4 border-[#C8FF00] bg-[#C8FF00]/5 p-4">
+            <p class="text-[#888] text-sm flex items-start gap-2">
+              <span class="text-[#C8FF00] font-black flex-shrink-0">!</span>
+              <span>部分技能需要加上 --force 參數，這是因為 VirusTotal 對某些技能有誤判，並非真的有安全問題。</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Method 3 -->
+    <div class="reveal">
+      <div class="bg-[#0d0d0d] border border-[#C8FF00]/30 overflow-hidden">
+        <div class="border-b border-[#C8FF00]/20 px-6 py-4 flex items-center gap-3 bg-[#C8FF00]/5">
+          <span class="text-[#C8FF00] font-black text-sm w-6">3</span>
+          <h4 class="text-white font-bold text-base">讓 AI 自建技能（skill-creator）</h4>
+        </div>
+        <div class="p-6">
+          <p class="text-[#888] mb-6 text-sm leading-relaxed">
+            安裝 skill-creator 技能後，你可以告訴 AI 你想要什麼功能，它會自動開發、測試並安裝。
+          </p>
+          <div class="bg-black border border-[#1a1a1a] p-5 space-y-4 mb-6 font-mono text-sm">
+            <div class="flex items-start gap-3">
+              <span class="text-[#888] font-bold flex-shrink-0">你：</span>
+              <span class="text-[#C8FF00]">幫我做一個每天爬取 PTT 科技板熱帖、整理 5 條重點的技能</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-[#888] font-bold flex-shrink-0">🦀：</span>
+              <span class="text-[#888]">好的，我來幫你建立這個技能，正在分析 PTT 結構...</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-[#444] font-bold text-xs flex-shrink-0">[AI 自動寫程式、測試、安裝]</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-[#888] font-bold flex-shrink-0">🦀：</span>
+              <span class="text-[#C8FF00]">技能「ptt-tech-summary」已安裝，每天會自動執行，並將重點摘要傳送給你。</span>
+            </div>
+          </div>
+          <div class="border-l-4 border-[#C8FF00] bg-[#C8FF00]/5 p-4">
+            <p class="text-[#C8FF00] text-sm font-semibold flex items-start gap-2">
+              <span class="flex-shrink-0">✦</span>
+              <span>skill-creator 讓大閘蟹的能力真正無限。只要你想得到，都可以讓它幫你開發。</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ SECTION 3: RECOMMENDED SKILLS ═══ -->
+<section id="recommended-skills" class="py-20 px-4 border-b border-[#1a1a1a]">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="reveal flex items-center gap-4 mb-12">
+      <span class="text-[#C8FF00] font-black text-sm tracking-widest">/03</span>
+      <div class="flex-1 h-px bg-[#1a1a1a]"></div>
+      <span class="text-xs font-bold tracking-widest uppercase text-[#444]">RECOMMENDED SKILLS</span>
+    </div>
+
+    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">推薦<span class="text-[#C8FF00]">技能</span>清單</h2>
+    <p class="reveal text-[#888] text-lg max-w-2xl mb-14 leading-relaxed">
+      以下是精選的實用技能，覆蓋日常使用的核心需求
+    </p>
+
+    <!-- Skills Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
+
+      <!-- 1. ddg-web-search -->
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center text-xl flex-shrink-0">🔍</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">ddg-web-search</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#1a1a1a] text-[#888]">搜尋</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          DuckDuckGo 即時搜尋，不需要任何 API Key。詢問最新資訊時自動觸發。
+        </p>
+        <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install ddg-web-search</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免費</span>
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">無需 API Key</span>
+          <span class="text-[10px] border border-[#888]/30 text-[#888] px-2 py-0.5 font-semibold">★ 預裝推薦</span>
+        </div>
+      </div>
+
+      <!-- 2. stock-info-explorer -->
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center text-xl flex-shrink-0">📈</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">stock-info-explorer</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#1a1a1a] text-[#888]">金融</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          美股、A股即時報價。支援 TSLA、貴州茅台 (600519)、ETF 等，基於 Yahoo Finance。
+        </p>
+        <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install --force stock-info-explorer</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免費</span>
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">即時數據</span>
+          <span class="text-[10px] border border-[#FF4D00]/30 text-[#FF4D00] px-2 py-0.5 font-semibold">需 uv</span>
+        </div>
+      </div>
+
+      <!-- 3. crypto-market-data -->
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center font-black text-[#FF4D00] text-lg flex-shrink-0">₿</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">crypto-market-data</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#1a1a1a] text-[#888]">金融</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          主流加密貨幣即時行情，BTC、ETH、SOL 等，含 24h 漲跌幅。
+        </p>
+        <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install --force crypto-market-data</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免費</span>
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">即時數據</span>
+        </div>
+      </div>
+
+      <!-- 4. news-summary -->
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center text-xl flex-shrink-0">📰</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">news-summary</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#1a1a1a] text-[#888]">資訊</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          指定主題的今日新聞摘要，AI 自動搜尋並整理成重點列表。
+        </p>
+        <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install --force news-summary</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">支援任意主題</span>
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">繁中支援</span>
+        </div>
+      </div>
+
+      <!-- 5. youtube-transcript -->
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center text-xl flex-shrink-0">🎬</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">youtube-transcript</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#1a1a1a] text-[#888]">工具</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          貼入 YouTube 網址，自動擷取字幕並整理重點，省時省力。
+        </p>
+        <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install youtube-transcript</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免費</span>
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">支援多語言字幕</span>
+        </div>
+      </div>
+
+      <!-- 6. translate -->
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center text-xl flex-shrink-0">🌐</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">translate</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#1a1a1a] text-[#888]">語言</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          多語言互譯，中英日韓等，AI 驅動比傳統翻譯更自然流暢。
+        </p>
+        <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install translate</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免費</span>
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">AI 驅動</span>
+        </div>
+      </div>
+
+      <!-- 7. summarize -->
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center text-xl flex-shrink-0">📄</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">summarize</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#1a1a1a] text-[#888]">工具</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          長文摘要整理，貼入文章、報告、合約，快速提取重點。
+        </p>
+        <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install summarize</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免費</span>
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">支援超長文本</span>
+        </div>
+      </div>
+
+      <!-- 8. weather -->
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center text-xl flex-shrink-0">🌤️</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">weather</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#1a1a1a] text-[#888]">生活</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          全球城市即時天氣查詢，基於 Open-Meteo，不需要任何 API Key。
+        </p>
+        <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install weather</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免費</span>
+          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">無需 API Key</span>
+          <span class="text-[10px] border border-[#888]/30 text-[#888] px-2 py-0.5 font-semibold">★ 預裝推薦</span>
+        </div>
+      </div>
+
+      <!-- 9. skill-creator -->
+      <div class="reveal bg-[#0d0d0d] border border-[#C8FF00]/40 p-5 card-hover">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#C8FF00] flex items-center justify-center text-xl flex-shrink-0">🛠️</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-black text-white text-sm">skill-creator</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#C8FF00]/40 text-[#C8FF00]">進階</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-[#888] text-sm leading-relaxed mb-4">
+          讓 AI 幫你自動開發新技能。告訴 AI 你的需求，它寫程式、測試、安裝，一條龍完成。
+        </p>
+        <div class="bg-black border border-[#C8FF00]/20 font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#C8FF00]">clawhub install --force skill-creator</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] border border-[#C8FF00]/40 text-[#C8FF00] px-2 py-0.5 font-semibold">無限擴充</span>
+          <span class="text-[10px] border border-[#C8FF00]/40 text-[#C8FF00] px-2 py-0.5 font-semibold">自然語言操作</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- One-click install all -->
+    <div class="reveal">
+      <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
+        <div class="px-6 py-4 border-b border-[#1a1a1a] flex items-center justify-between">
+          <span class="text-white font-bold text-sm">一次安裝所有推薦技能</span>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors" data-text="clawhub install ddg-web-search weather summarize translate youtube-transcript
+clawhub install --force skill-creator stock-info-explorer news-summary crypto-market-data">複製全部</button>
+        </div>
+        <div class="p-6 font-mono text-sm overflow-x-auto">
+          <pre class="text-[#888]"><span class="text-[#444]"># 一次安裝所有推薦技能</span>
+<span class="text-white">clawhub install ddg-web-search weather summarize translate youtube-transcript</span>
+<span class="text-white">clawhub install --force skill-creator stock-info-explorer news-summary crypto-market-data</span></pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="py-20 px-4 border-b border-[#1a1a1a]">
+  <div class="max-w-4xl mx-auto">
+    <div class="reveal border border-[#1a1a1a] p-8 sm:p-12">
+      <div class="mb-3">
+        <span class="text-xs font-bold tracking-widest uppercase text-[#444]">MORE SKILLS</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">
+        想要<span class="text-[#C8FF00]">更多</span>技能？
+      </h2>
+      <p class="text-[#888] text-lg mb-10 leading-relaxed max-w-xl">
+        告訴大閘蟹你的需求，它可以幫你自動開發專屬技能
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="./guide.html"
+          class="inline-flex items-center justify-center gap-2 bg-[#C8FF00] text-black text-sm font-black px-8 py-4 hover:bg-[#d9ff33] transition-colors tracking-tight">
+          步驟教學 →
+        </a>
+        <a href="./faq.html"
+          class="inline-flex items-center justify-center gap-2 border border-[#1a1a1a] text-[#888] text-sm font-black px-8 py-4 hover:border-[#888] hover:text-white transition-colors tracking-tight">
+          常見問題
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="bg-black border-t border-[#1a1a1a] text-[#888] py-14">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-3 gap-10 mb-10">
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-2 mb-4">
+          <svg width="111" height="93" viewBox="0 0 111 93" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;">
+            <rect x="29" y="23" width="50" height="63" fill="#E63B35"/><rect x="74" y="23" width="5" height="63" fill="#B52C27"/><rect x="91" y="29" width="5" height="8" fill="#B52C27"/><path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/><path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/><rect x="18" y="29" width="8" height="8" fill="#B52C27"/><path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/><rect x="16" y="29" width="8" height="8" fill="#E63B35"/><path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/><rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/><rect x="34" y="86" width="12" height="7" fill="#E63B35"/><rect x="62" y="86" width="12" height="7" fill="#E63B35"/><rect x="40" y="6" width="8" height="17" fill="#E63B35"/><rect x="40" y="6" width="6" height="13" fill="black"/><rect x="41" y="7" width="3" height="7" fill="white"/><rect x="60" y="6" width="8" height="17" fill="#E63B35"/><rect x="60" y="6" width="6" height="13" fill="black"/><rect x="61" y="7" width="3" height="7" fill="white"/>
+          </svg>
+          <span class="text-white font-black text-lg">大閘蟹</span>
+        </div>
+        <p class="text-sm leading-relaxed text-[#444]">风浪越大，蟹越贵。<br>你的專屬 AI，住在 Telegram 裡。</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-xs tracking-widest uppercase mb-5">產品</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="./index.html#features" class="hover:text-white transition-colors">功能介紹</a></li>
+          <li><a href="./index.html#pricing" class="hover:text-white transition-colors">方案價格</a></li>
+          <li><a href="./index.html#compare" class="hover:text-white transition-colors">對比分析</a></li>
+          <li><a href="./index.html#scenarios" class="hover:text-white transition-colors">使用情境</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-xs tracking-widest uppercase mb-5">幫助</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="./guide.html" class="hover:text-white transition-colors">步驟教學</a></li>
+          <li><a href="./advanced.html" class="text-white transition-colors">進階功能</a></li>
+          <li><a href="./faq.html" class="hover:text-white transition-colors">常見問題</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-[#1a1a1a] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-[#444]">© 2026 大閘蟹. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const overlay = document.getElementById('drawer-overlay');
+  const iconH = document.getElementById('icon-hamburger');
+  const iconC = document.getElementById('icon-close');
+  function openMenu() { mobileMenu.classList.add('open'); overlay.classList.remove('hidden'); iconH.classList.add('hidden'); iconC.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+  function closeMenu() { mobileMenu.classList.remove('open'); overlay.classList.add('hidden'); iconH.classList.remove('hidden'); iconC.classList.add('hidden'); document.body.style.overflow=''; }
+  hamburger.addEventListener('click', () => mobileMenu.classList.contains('open') ? closeMenu() : openMenu());
+  overlay.addEventListener('click', closeMenu);
+  document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMenu));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.dataset.text || (() => {
+        const pre = btn.closest('.bg-\\[\\#0d0d0d\\], .bg-black')?.querySelector('pre');
+        return pre ? pre.innerText : '';
+      })();
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '已複製 ✓';
+        btn.style.color = '#C8FF00';
+        setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        const orig = btn.textContent;
+        btn.textContent = '已複製 ✓';
+        btn.style.color = '#C8FF00';
+        setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
