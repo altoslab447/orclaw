@@ -404,7 +404,7 @@ openclaw init</pre>
         </div>
         <div class="p-4 font-mono text-sm overflow-x-auto">
           <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 手動建立設定檔</span>
-cat > /root/.openclaw/config.json << <span class="sh-s">'EOF'</span>
+cat > /root/.openclaw/config.json &lt;&lt; <span class="sh-s">'EOF'</span>
 {
   <span class="sh-s">"ai"</span>: {
     <span class="sh-s">"provider"</span>: <span class="sh-s">"gemini"</span>,
@@ -530,7 +530,7 @@ ln -sf /root/.local/bin/uv /usr/local/bin/uv</pre>
         </div>
         <div class="p-4 font-mono text-sm overflow-x-auto">
           <pre class="text-[#888] leading-relaxed"><span class="sh-c"># 建立 systemd service 檔案</span>
-cat > /etc/systemd/system/openclaw.service << <span class="sh-s">'EOF'</span>
+cat > /etc/systemd/system/openclaw.service &lt;&lt; <span class="sh-s">'EOF'</span>
 [Unit]
 Description=OpenClaw AI Agent
 After=network.target
