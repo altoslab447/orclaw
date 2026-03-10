@@ -1,446 +1,975 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-HK" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>常见问题｜大闸蟹</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦀</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+HK:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Space Grotesk', 'Noto Sans HK', sans-serif; }
-    :root { --lime: #C8FF00; --orange: #FF4D00; --black: #000; --border: #1a1a1a; --card: #0d0d0d; --gray: #888; }
+    * { font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif; }
+    :root {
+      --lime: #E85542;
+      --orange: #FF6B35;
+      --black: #0b0e14;
+      --dark: #141820;
+      --card: #141820;
+      --border: #1e2433;
+      --gray: #8899aa;
+    }
     html { scroll-behavior: smooth; }
-    body { background: #000; color: #fff; }
-    .lime { color: #C8FF00; }
+    body { background: #0b0e14; color: #fff; }
+
+    /* ── Space theme overrides ── */
+    .bg-black { background-color: #0b0e14 !important; }
+    [class*="bg-[#0d0d0d]"] { background-color: #141820 !important; }
+    [class*="bg-[#080808]"] { background-color: #0f1520 !important; }
+    [class*="bg-[#111]"]    { background-color: #161d2a !important; }
+    [class*="border-[#1a1a1a]"] { border-color: #1e2433 !important; }
+    [class*="border-[#222]"]    { border-color: #1e2433 !important; }
+    [class*="border-[#333]"]    { border-color: #263040 !important; }
+
+    /* Nebula glow top-left */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: -200px;
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(232,85,66,0.10) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Rounded cards */
+    .card-hover { border-radius: 12px; overflow: hidden; }
+
+    /* Header: transparent at top, dark + logo on scroll */
+    header {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      transition: background-color 0.4s ease, border-color 0.4s ease;
+    }
+    header.scrolled {
+      background-color: rgba(11, 14, 20, 0.97) !important;
+      border-color: #1e2433 !important;
+    }
+
+    /* Header logo: hidden at top, slides in on scroll */
+    #header-logo {
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+    header.scrolled #header-logo {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    /* bg-black/opacity variants */
+    [class*="bg-black\/"] { background-color: rgba(11, 14, 20, var(--tw-bg-opacity, 0.95)) !important; }
+
+    /* Grid gap dividers */
+    [class*="bg-[#1a1a1a]"] { background-color: #1e2433 !important; }
+
+    /* Utility color classes (for i18n injected HTML) */
+    .lime { color: var(--lime); }
+    .orange { color: var(--orange); }
+
+    /* Marquee */
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+    .marquee-wrap { overflow: hidden; }
+    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+
+    /* Scroll reveal */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Card hover */
+    .card-hover { transition: transform 0.2s ease; }
+    .card-hover:hover { transform: translateY(-3px); }
+
+    /* Mobile drawer */
     #mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
     #mobile-menu.open { transform: translateX(0); }
-    @keyframes logoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+    /* Chat animation */
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .msg-1 { animation: msgIn 0.4s ease 0.3s both; }
+    .msg-2 { animation: msgIn 0.4s ease 0.7s both; }
+    .msg-3 { animation: msgIn 0.4s ease 1.1s both; }
+    .msg-4 { animation: msgIn 0.4s ease 1.5s both; }
+    .msg-5 { animation: msgIn 0.4s ease 1.9s both; }
+
+    /* Header logo float */
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
     .logo-float { animation: logoFloat 2.8s ease-in-out infinite; }
+
+    /* Compare table zebra */
+    .compare-row:nth-child(even) { background: #0f1520; }
+
+    /* Dot pattern background */
+    .dot-bg {
+      background-image: radial-gradient(circle, #1e2433 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* Provider chip */
+    .provider-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px;
+      background: #141820; font-size: 0.8rem; font-weight: 600; color: #8899aa;
+      border: 1px solid #1e2433; border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .provider-chip:hover { background: #1e2433; color: #fff; }
+
+    /* Marquee brighter on dark navy */
+    .marquee-track span[class*="text-[#333]"] { color: #3a4d63 !important; }
+    .marquee-track span[class*="text-[#222]"] { color: #263040 !important; }
+
+    /* ── Light mode ──────────────────────────────────────────── */
+    html[data-theme="light"] body { background: #f5f4ef !important; color: #111111 !important; }
+    html[data-theme="light"] #starfield { opacity: 0; }
+    html[data-theme="light"] body::before { background: radial-gradient(circle, rgba(232,85,66,0.04) 0%, transparent 65%); }
+    html[data-theme="light"] header.scrolled { background-color: rgba(245,244,239,0.97) !important; border-color: #e2dfd6 !important; }
+
+    /* Backgrounds */
+    html[data-theme="light"] .bg-black { background-color: #f5f4ef !important; }
+    html[data-theme="light"] [class*="bg-[#0d0d0d]"] { background-color: #f0eeea !important; }
+    html[data-theme="light"] [class*="bg-[#080808]"] { background-color: #eeece5 !important; }
+    html[data-theme="light"] [class*="bg-[#111]"]    { background-color: #e8e5dc !important; }
+    html[data-theme="light"] [class*="bg-[#141820]"] { background-color: #f8f6f1 !important; }
+    html[data-theme="light"] [class*="bg-[#0f1520]"] { background-color: #eeece5 !important; }
+    html[data-theme="light"] [class*="bg-[#0b0e14]"] { background-color: #f5f4ef !important; }
+    html[data-theme="light"] [class*="bg-[#1a1a1a]"] { background-color: #e8e5dc !important; }
+    html[data-theme="light"] [class*="bg-[#060606]"] { background-color: #f0eeea !important; }
+    html[data-theme="light"] [class*="bg-[#161d2a]"] { background-color: #2d2d2d !important; }
+    html[data-theme="light"] [class*="bg-black\/"]   { background-color: rgba(245,244,239,0.6) !important; }
+
+    /* Borders */
+    html[data-theme="light"] [class*="border-[#1a1a1a]"] { border-color: #e2dfd6 !important; }
+    html[data-theme="light"] [class*="border-[#222]"]    { border-color: #e2dfd6 !important; }
+    html[data-theme="light"] [class*="border-[#333]"]    { border-color: #d5d2c8 !important; }
+    html[data-theme="light"] [class*="border-[#1e2433]"] { border-color: #e2dfd6 !important; }
+    html[data-theme="light"] [class*="border-[#263040]"] { border-color: #d0cdc4 !important; }
+
+    /* Text */
+    html[data-theme="light"] .text-white               { color: #111111 !important; }
+    html[data-theme="light"] [class*="text-white"]     { color: #111111 !important; }
+    html[data-theme="light"] [class*="text-gray-200"]  { color: #333333 !important; }
+    html[data-theme="light"] [class*="text-[#888]"]    { color: #666666 !important; }
+    html[data-theme="light"] [class*="text-[#8899aa]"] { color: #777777 !important; }
+    html[data-theme="light"] [class*="text-[#aaa]"]    { color: #555555 !important; }
+    html[data-theme="light"] [class*="text-[#666]"]    { color: #888888 !important; }
+    html[data-theme="light"] [class*="text-[#555]"]    { color: #999999 !important; }
+    html[data-theme="light"] [class*="text-[#444]"]    { color: #aaaaaa !important; }
+
+    /* Re-whitelist text ON coral/orange buttons */
+    html[data-theme="light"] [class*="bg-[#E85542]"] .text-white,
+    html[data-theme="light"] [class*="bg-[#E85542]"][class*="text-white"],
+    html[data-theme="light"] [class*="bg-[#ef6b5a]"][class*="text-white"],
+    html[data-theme="light"] [class*="bg-[#FF4D00]"][class*="text-white"] { color: #ffffff !important; }
+
+    /* Dot pattern, compare table, provider chips, marquee */
+    html[data-theme="light"] .dot-bg { background-image: radial-gradient(circle, #d0cdc4 1px, transparent 1px) !important; }
+    html[data-theme="light"] .compare-row:nth-child(even) { background: #eeece5 !important; }
+    html[data-theme="light"] .provider-chip { background: #f0eeea !important; border-color: #e2dfd6 !important; color: #666 !important; }
+    html[data-theme="light"] .provider-chip:hover { background: #e5e2d8 !important; color: #111 !important; }
+    html[data-theme="light"] .marquee-track span[class*="text-[#333]"] { color: #c0bdb4 !important; }
+
+    /* Smooth star canvas fade */
+    #starfield { transition: opacity 0.5s ease; }
+
+    /* Waveform bar animation */
+    @keyframes waveBar {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.4); }
+    }
+    .wave-bar { transform-origin: bottom; }
+    .wave-bar:nth-child(1)  { animation: waveBar 1.2s ease-in-out 0.0s infinite; }
+    .wave-bar:nth-child(2)  { animation: waveBar 1.2s ease-in-out 0.1s infinite; }
+    .wave-bar:nth-child(3)  { animation: waveBar 1.2s ease-in-out 0.2s infinite; }
+    .wave-bar:nth-child(4)  { animation: waveBar 1.2s ease-in-out 0.3s infinite; }
+    .wave-bar:nth-child(5)  { animation: waveBar 1.2s ease-in-out 0.4s infinite; }
+    .wave-bar:nth-child(6)  { animation: waveBar 1.2s ease-in-out 0.5s infinite; }
+    .wave-bar:nth-child(7)  { animation: waveBar 1.2s ease-in-out 0.6s infinite; }
+    .wave-bar:nth-child(8)  { animation: waveBar 1.2s ease-in-out 0.7s infinite; }
+    .wave-bar:nth-child(9)  { animation: waveBar 1.2s ease-in-out 0.15s infinite; }
+    .wave-bar:nth-child(10) { animation: waveBar 1.2s ease-in-out 0.25s infinite; }
+    .wave-bar:nth-child(11) { animation: waveBar 1.2s ease-in-out 0.35s infinite; }
+    .wave-bar:nth-child(12) { animation: waveBar 1.2s ease-in-out 0.45s infinite; }
+    .wave-bar:nth-child(13) { animation: waveBar 1.2s ease-in-out 0.55s infinite; }
+    .wave-bar:nth-child(14) { animation: waveBar 1.2s ease-in-out 0.65s infinite; }
+    .wave-bar:nth-child(15) { animation: waveBar 1.2s ease-in-out 0.75s infinite; }
+    .wave-bar:nth-child(16) { animation: waveBar 1.2s ease-in-out 0.85s infinite; }
+
+    /* Gradient shift text effect (inspired by openclaw) */
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .gradient-shift {
+      background: linear-gradient(135deg, #E85542 0%, #FF4D00 30%, #C8FF00 60%, #E85542 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 6s ease infinite;
+    }
+
     /* FAQ accordion */
     .faq-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
     .faq-body.open { max-height: 600px; }
     .faq-chevron { transition: transform 0.3s ease; }
     .faq-chevron.open { transform: rotate(180deg); }
-    /* Pill active state */
+    /* Pill active state - updated to coral */
     .pill { cursor: pointer; transition: border-color 0.2s, color 0.2s; }
-    .pill.active { border-color: #C8FF00 !important; color: #C8FF00 !important; }
+    .pill.active { border-color: #E85542 !important; color: #E85542 !important; }
   </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
 
-<!-- ═══════════════════════════════════════════
-     STICKY HEADER
-══════════════════════════════════════════════ -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-black/95 border-b border-[#1a1a1a]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-14">
-      <a href="./index.html" class="flex items-center gap-2 select-none tracking-tight">
-        <svg width="111" height="93" viewBox="0 0 111 93" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-float" style="height:38px;width:auto;">
-          <rect x="29" y="23" width="50" height="63" fill="#E63B35"/><rect x="74" y="23" width="5" height="63" fill="#B52C27"/><rect x="91" y="29" width="5" height="8" fill="#B52C27"/><path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/><path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/><rect x="18" y="29" width="8" height="8" fill="#B52C27"/><path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/><rect x="16" y="29" width="8" height="8" fill="#E63B35"/><path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/><rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/><rect x="34" y="86" width="12" height="7" fill="#E63B35"/><rect x="62" y="86" width="12" height="7" fill="#E63B35"/><rect x="40" y="6" width="8" height="17" fill="#E63B35"/><rect x="40" y="6" width="6" height="13" fill="black"/><rect x="41" y="7" width="3" height="7" fill="white"/><rect x="60" y="6" width="8" height="17" fill="#E63B35"/><rect x="60" y="6" width="6" height="13" fill="black"/><rect x="61" y="7" width="3" height="7" fill="white"/>
+  <canvas id="starfield" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════════════════════════ -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-black/95 border-b border-[#1a1a1a]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+
+        <!-- Logo (hidden at top, appears on scroll) -->
+        <a id="header-logo" href="./index.html" class="flex items-center gap-2 font-bold text-sm select-none tracking-tight">
+          <svg width="111" height="91" viewBox="0 0 111 91" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-float" style="height:38px;width:auto;">
+            <rect x="29" y="23" width="50" height="63" fill="#E63B35"/>
+            <rect x="74" y="23" width="5" height="63" fill="#B52C27"/>
+            <rect x="91" y="29" width="5" height="8" fill="#B52C27"/>
+            <rect x="21" y="29" width="5" height="8" fill="#B52C27"/>
+            <path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/>
+            <path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/>
+            <path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/>
+            <rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/>
+            <path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/>
+            <rect width="8" height="8" transform="matrix(-1 0 0 1 22 29)" fill="#E63B35"/>
+            <rect x="14" y="79" width="12" height="7" fill="#E63B35"/>
+            <rect x="14" y="68" width="12" height="7" fill="#E63B35"/>
+            <rect x="14" y="57" width="12" height="7" fill="#E63B35"/>
+            <rect x="82" y="68" width="12" height="7" fill="#E63B35"/>
+            <rect x="82" y="57" width="12" height="7" fill="#E63B35"/>
+            <rect x="82" y="79" width="12" height="7" fill="#E63B35"/>
+            <rect x="7" y="91" width="12" height="7" transform="rotate(-90 7 91)" fill="#E63B35"/>
+            <rect x="7" y="77" width="9" height="7" transform="rotate(-90 7 77)" fill="#E63B35"/>
+            <rect x="7" y="66" width="9" height="7" transform="rotate(-90 7 66)" fill="#E63B35"/>
+            <rect x="94" y="91" width="12" height="7" transform="rotate(-90 94 91)" fill="#E63B35"/>
+            <rect x="94" y="77" width="9" height="7" transform="rotate(-90 94 77)" fill="#E63B35"/>
+            <rect x="94" y="66" width="9" height="7" transform="rotate(-90 94 66)" fill="#E63B35"/>
+            <rect x="40" y="6" width="8" height="17" fill="#E63B35"/>
+            <rect x="40" y="6" width="6" height="13" fill="black"/>
+            <rect x="41" y="7" width="3" height="7" fill="white"/>
+            <rect x="60" y="6" width="8" height="17" fill="#E63B35"/>
+            <rect x="60" y="6" width="6" height="13" fill="black"/>
+            <rect x="61" y="7" width="3" height="7" fill="white"/>
+          </svg>
+          <span class="text-white font-black text-2xl" data-i18n="cmp.brand.label">大闸蟹</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#666]">
+          <a href="./index.html#scenarios" class="hover:text-white transition-colors" data-i18n="nav.usecases">使用场景</a>
+          <a href="./index.html#features"  class="hover:text-white transition-colors" data-i18n="nav.features">功能</a>
+          <a href="./index.html#pricing"   class="hover:text-white transition-colors" data-i18n="nav.pricing">方案</a>
+          <a href="./guide.html"    class="hover:text-white transition-colors inline-flex items-center gap-1" data-i18n="nav.guide">使用教程<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+          <a href="./advanced.html" class="hover:text-white transition-colors inline-flex items-center gap-1" data-i18n="nav.advanced">高级功能<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+          <a href="./faq.html"      class="text-white font-bold inline-flex items-center gap-1" data-i18n="nav.faq">常见问题<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+        </nav>
+
+        <!-- Right: Lang + CTA -->
+        <div class="flex items-center gap-3">
+          <button id="lang-btn"
+            class="hidden md:inline-flex items-center px-3 py-1.5 border border-[#333] text-xs font-bold text-[#888] hover:border-white hover:text-white transition-colors tracking-wider">
+            EN
+          </button>
+          <!-- Theme toggle (desktop) -->
+          <button id="theme-btn"
+            class="hidden md:inline-flex items-center justify-center w-8 h-8 border border-[#333] text-[#888] hover:border-white hover:text-white transition-colors"
+            aria-label="Toggle theme">
+            <!-- Moon icon: shown in dark mode -->
+            <svg id="icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+            </svg>
+            <!-- Sun icon: shown in light mode -->
+            <svg id="icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </button>
+          <a href="./index.html#pricing"
+            class="hidden md:inline-flex items-center gap-1 bg-[#E85542] text-white text-sm font-black px-5 py-2 hover:bg-[#ef6b5a] transition-colors tracking-tight"
+            data-i18n="nav.cta">查看方案 ↗</a>
+
+          <!-- Mobile hamburger -->
+          <button id="hamburger-btn" class="md:hidden p-2" aria-label="Menu">
+            <svg id="icon-hamburger" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <svg id="icon-close" class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-menu" class="fixed top-0 right-0 bottom-0 w-72 bg-[#080808] z-40 shadow-2xl flex flex-col pt-20 px-6 pb-8 border-l border-[#1a1a1a]">
+    <nav class="flex flex-col gap-1 text-[#aaa] font-medium text-base">
+      <a href="./index.html#scenarios" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors" data-i18n="nav.usecases">使用场景</a>
+      <a href="./index.html#features"  class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors" data-i18n="nav.features">功能</a>
+      <a href="./index.html#pricing"   class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors" data-i18n="nav.pricing">方案</a>
+      <a href="./guide.html"    class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors flex items-center justify-between" data-i18n="nav.guide">使用教程<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+      <a href="./advanced.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors flex items-center justify-between" data-i18n="nav.advanced">高级功能<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+      <a href="./faq.html"      class="mobile-link py-3 border-b border-[#1a1a1a] text-[#E85542] flex items-center justify-between" data-i18n="nav.faq">常见问题<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+    </nav>
+    <div class="mt-6 flex flex-col gap-3">
+      <button id="lang-btn-mobile"
+        class="w-full py-2.5 border border-[#333] text-sm font-bold text-[#888] hover:border-white hover:text-white transition-colors tracking-wider">
+        EN
+      </button>
+      <!-- Theme toggle (mobile) -->
+      <button id="theme-btn-mobile"
+        class="w-full py-2.5 border border-[#333] text-sm font-bold text-[#888] hover:border-white hover:text-white transition-colors flex items-center justify-center gap-2">
+        <svg id="icon-moon-mobile" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
         </svg>
-        <span class="text-white font-black text-2xl">大闸蟹</span>
-      </a>
-      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#666]">
-        <a href="./index.html#scenarios" class="hover:text-white transition-colors">使用情境</a>
-        <a href="./index.html#features" class="hover:text-white transition-colors">功能</a>
-        <a href="./index.html#pricing" class="hover:text-white transition-colors">方案</a>
-        <a href="./guide.html" class="hover:text-white transition-colors inline-flex items-center gap-1">步骤教学<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-        <a href="./advanced.html" class="hover:text-white transition-colors inline-flex items-center gap-1">进阶功能<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-        <a href="./faq.html" class="text-white font-bold inline-flex items-center gap-1">常见问题<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-      </nav>
-      <div class="flex items-center gap-3">
-        <a href="./index.html#pricing" class="hidden md:inline-flex items-center gap-1 bg-[#C8FF00] text-black text-sm font-black px-5 py-2 hover:bg-[#d9ff33] transition-colors tracking-tight">查看方案 ↗</a>
-        <button id="hamburger-btn" class="md:hidden p-2" aria-label="Menu">
-          <svg id="icon-hamburger" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-          <svg id="icon-close" class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <svg id="icon-sun-mobile" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        <span id="theme-label-mobile">浅色模式</span>
+      </button>
+      <a href="./index.html#pricing"
+        class="mobile-link w-full text-center bg-[#E85542] text-white text-sm font-black px-5 py-3 hover:bg-[#ef6b5a] transition-colors"
+        data-i18n="nav.cta">查看方案 ↗</a>
+    </div>
+  </div>
+  <div id="drawer-overlay" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════ -->
+  <section class="relative z-10 pt-32 pb-20 border-b border-[#1a1a1a]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <p class="text-[#888] text-xs font-bold tracking-[0.2em] uppercase mb-4">HELP &amp; FAQ</p>
+        <h1 class="text-5xl sm:text-7xl font-black leading-none mb-6 tracking-tight">
+          常见<span class="lime">问题</span>
+        </h1>
+        <p class="text-[#888] text-lg max-w-xl">
+          找不到答案？直接联系我们，通常 24 小时内回复。
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       CATEGORY FILTER
+  ════════════════════════════════════════════════ -->
+  <section class="relative z-10 py-10 border-b border-[#1a1a1a]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal flex flex-wrap gap-2" id="pill-container">
+        <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#E85542] hover:text-[#E85542] active" data-cat="all">全部</button>
+        <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#E85542] hover:text-[#E85542]" data-cat="basic">基本问题</button>
+        <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#E85542] hover:text-[#E85542]" data-cat="features">功能说明</button>
+        <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#E85542] hover:text-[#E85542]" data-cat="billing">计费</button>
+        <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#E85542] hover:text-[#E85542]" data-cat="tech">技术问题</button>
+        <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#E85542] hover:text-[#E85542]" data-cat="telegram">Telegram</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       FAQ ACCORDION
+  ════════════════════════════════════════════════ -->
+  <section class="relative z-10 pb-0">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" id="faq-list">
+
+      <!-- ── BASIC ── -->
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="basic">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">大闸蟹是什么？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
         </button>
-      </div>
-    </div>
-  </div>
-</header>
-<div id="mobile-menu" class="fixed top-0 right-0 bottom-0 w-72 bg-[#080808] z-40 shadow-2xl flex flex-col pt-20 px-6 pb-8 border-l border-[#1a1a1a]">
-  <nav class="flex flex-col gap-1 text-[#aaa] font-medium text-base">
-    <a href="./index.html#scenarios" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">使用情境</a>
-    <a href="./index.html#features" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">功能</a>
-    <a href="./index.html#pricing" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">方案</a>
-    <a href="./guide.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors flex items-center justify-between">步骤教学<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-    <a href="./advanced.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors flex items-center justify-between">进阶功能<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-    <a href="./faq.html" class="mobile-link py-3 border-b border-[#1a1a1a] text-[#C8FF00] flex items-center justify-between">常见问题<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-  </nav>
-  <div class="mt-6">
-    <a href="./index.html#pricing" class="mobile-link block w-full text-center bg-[#C8FF00] text-black text-sm font-black px-5 py-3 hover:bg-[#d9ff33] transition-colors">查看方案 ↗</a>
-  </div>
-</div>
-<div id="drawer-overlay" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden"></div>
-
-
-<!-- ═══════════════════════════════════════════
-     HERO
-══════════════════════════════════════════════ -->
-<section class="pt-32 pb-20 border-b border-[#1a1a1a]">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="reveal">
-      <p class="text-[#888] text-xs font-bold tracking-[0.2em] uppercase mb-4">HELP &amp; FAQ</p>
-      <h1 class="text-5xl sm:text-7xl font-black leading-none mb-6 tracking-tight">
-        常见<span class="lime">问题</span>
-      </h1>
-      <p class="text-[#888] text-lg max-w-xl">
-        找不到答案？直接透过 Telegram 联系我们，通常 24 小时内回复。
-      </p>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════
-     CATEGORY FILTER
-══════════════════════════════════════════════ -->
-<section class="py-10 border-b border-[#1a1a1a]">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="reveal flex flex-wrap gap-2" id="pill-container">
-      <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#C8FF00] hover:text-[#C8FF00] active" data-cat="all">全部</button>
-      <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#C8FF00] hover:text-[#C8FF00]" data-cat="basic">基本问题</button>
-      <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#C8FF00] hover:text-[#C8FF00]" data-cat="features">功能说明</button>
-      <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#C8FF00] hover:text-[#C8FF00]" data-cat="billing">计费</button>
-      <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#C8FF00] hover:text-[#C8FF00]" data-cat="tech">技术问题</button>
-      <button class="pill px-4 py-2 text-xs font-bold tracking-widest uppercase border border-[#333] text-[#888] hover:border-[#C8FF00] hover:text-[#C8FF00]" data-cat="telegram">Telegram</button>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════
-     FAQ ACCORDION
-══════════════════════════════════════════════ -->
-<section class="pb-0">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" id="faq-list">
-
-    <!-- ── BASIC ── -->
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="basic">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">大闸蟹是什么？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          大闸蟹是一个部署在云端伺服器上的个人 AI 助理平台。我们帮你把 AI（如 GPT、Claude、Gemini 等）安装在独立主机上，并绑定你的 Telegram Bot，让你可以随时透过 Telegram 传讯息给 AI，完成各种任务，24 小时不间断。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="basic">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">我需要自己有伺服器吗？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          不需要。我们帮你开好、设定好，你只需要提供 AI API Key 和 Telegram Bot Token，其他都交给我们处理。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="basic">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">跟 ChatGPT 有什么不同？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          ChatGPT 是你去找它；大闸蟹是它主动找你。大闸蟹 24 小时运行在你的专属主机，可以排程、监控、主动推播，住在你的 Telegram 里，不需要开电脑或登入任何网站。
-        </p>
-      </div>
-    </div>
-
-    <!-- ── FEATURES ── -->
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="features">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">什么是「技能（Skills）」？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          技能是扩充 AI 功能的插件。大闸蟹预装了 9 种技能，包含股票查询、加密货币行情、新闻摘要、YouTube 摘要、即时搜寻、翻译、天气查询、长文整理、AI 自建技能。你也可以让 AI 帮你自动开发新技能。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="features">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">可以设定排程任务吗？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          可以。你可以告诉大闸蟹「每天早上 8 点帮我整理财经早报」或「每周一汇报上周美股表现」，它会定时自动执行并推播给你。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="features">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">大闸蟹记得我说过的事吗？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          是的。大闸蟹有永久记忆功能，你说过的偏好、设定、持仓资讯都会被记住，下次对话不需要重复说明。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="features">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">支援哪些 AI 模型？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          支援市面上所有主流 AI：Google Gemini（有免费额度）、OpenAI GPT-4/4o、Anthropic Claude、DeepSeek（超高 CP 值）、Groq（极速）、xAI Grok 等。你可以随时切换，用自己的 API Key，按用量付费。
-        </p>
-      </div>
-    </div>
-
-    <!-- ── BILLING ── -->
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="billing">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">费用怎么计算？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          月费是主机租用费（人民币计价）。AI 使用费另计——你用自己申请的 API Key，费用直接向 AI 厂商（如 OpenAI、Google 等）支付，我们不收任何 AI 使用抽成。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="billing">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">AI API 费用大概多少？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          以 Google Gemini 为例，有相当充裕的免费额度，日常使用几乎免费。OpenAI GPT-4o 约每百万 Token $2.5 美元；DeepSeek 更便宜，约不到 OpenAI 的 1/10。实际费用视使用量而定。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="billing">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">可以随时取消吗？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          可以。到期不续费，服务自动停止，不会自动扣款。
-        </p>
-      </div>
-    </div>
-
-    <!-- ── TECH ── -->
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="tech">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">我的资料安全吗？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          非常安全。每个用户都有独立的云端主机，资料不会与其他用户共用。你的对话记录只存在你的主机上，我们不会读取你的对话内容。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="tech">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">大闸蟹回应速度怎么样？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          回应速度主要取决于你选择的 AI 模型。如果追求速度，可以选择 Groq（极速推理），一般对话几乎即时回应。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="tech">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">如果 AI 回应出错怎么办？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          可以直接在 Telegram 反映问题，我们会协助排查。常见问题如 API Key 额度不足、网路问题等，大闸蟹会主动告知错误原因。
-        </p>
-      </div>
-    </div>
-
-    <!-- ── TELEGRAM ── -->
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="telegram">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">怎么取得 Telegram Bot Token？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          在 Telegram 搜寻 @BotFather，输入 /newbot，按照指示命名你的 Bot，即可取得 Token（格式：1234567890:ABCdef...）。详细步骤请参考步骤教学页面。
-        </p>
-      </div>
-    </div>
-
-    <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="telegram">
-      <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
-        <span class="font-bold text-white text-base leading-snug">一个 Bot Token 可以给多人使用吗？</span>
-        <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#C8FF00]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      <div class="faq-body">
-        <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
-          不建议。每个 Bot Token 对应一个 Telegram Bot，建议每个帐号使用独立的 Bot，确保对话记忆和资料隔离。如需多人共用，请考虑 Pro 以上方案。
-        </p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════
-     STILL HAVE QUESTIONS CTA
-══════════════════════════════════════════════ -->
-<section class="py-24 border-t border-[#1a1a1a]">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-12">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-        <div>
-          <p class="text-[#888] text-xs font-bold tracking-[0.2em] uppercase mb-3">SUPPORT</p>
-          <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
-            还有其他<span class="lime">问题</span>吗？
-          </h2>
-          <p class="text-[#888] text-base">
-            直接透过 Telegram 联系我们，通常 24 小时内回复。
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            大闸蟹是一个部署在云端伺服器上的个人 AI 助理平台。我们帮你把 AI（如 GPT、Claude、Gemini 等）安装在独立主机上，并绑定你的 Telegram Bot，让你可以随时透过 Telegram 传讯息给 AI，完成各种任务，24 小时不间断。
           </p>
         </div>
-        <div class="flex flex-col sm:flex-row gap-3 flex-shrink-0">
-          <a href="https://t.me/your_support_handle" target="_blank"
-            class="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#229ED9] text-white text-sm font-black hover:bg-[#1a8bbf] transition-colors tracking-tight">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-            </svg>
-            透过 Telegram 联系
-          </a>
-          <a href="./index.html#pricing"
-            class="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#C8FF00] text-black text-sm font-black hover:bg-[#d9ff33] transition-colors tracking-tight">
-            查看方案 ↗
-          </a>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="basic">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">我需要自己有伺服器吗？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            不需要。我们帮你开好、设定好，你只需要提供 AI API Key 和 Telegram Bot Token，其他都交给我们处理。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="basic">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">跟 ChatGPT 有什么不同？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            ChatGPT 是你去找它；大闸蟹是它主动找你。大闸蟹 24 小时运行在你的专属主机，可以排程、监控、主动推播，住在你的 Telegram 里，不需要开电脑或登入任何网站。
+          </p>
+        </div>
+      </div>
+
+      <!-- ── FEATURES ── -->
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="features">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">什么是「技能（Skills）」？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            技能是扩充 AI 功能的插件。大闸蟹预装了 9 种技能，包含股票查询、加密货币行情、新闻摘要、YouTube 摘要、即时搜寻、翻译、天气查询、长文整理、AI 自建技能。你也可以让 AI 帮你自动开发新技能。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="features">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">可以设定排程任务吗？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            可以。你可以告诉大闸蟹「每天早上 8 点帮我整理财经早报」或「每周一汇报上周美股表现」，它会定时自动执行并推播给你。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="features">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">大闸蟹记得我说过的事吗？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            是的。大闸蟹有永久记忆功能，你说过的偏好、设定、持仓资讯都会被记住，下次对话不需要重复说明。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="features">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">支援哪些 AI 模型？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            支援市面上所有主流 AI：Google Gemini（有免费额度）、OpenAI GPT-4/4o、Anthropic Claude、DeepSeek（超高 CP 值）、Groq（极速）、xAI Grok 等。你可以随时切换，用自己的 API Key，按用量付费。
+          </p>
+        </div>
+      </div>
+
+      <!-- ── BILLING ── -->
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="billing">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">费用怎么计算？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            月费是主机租用费（人民币计价）。AI 使用费另计——你用自己申请的 API Key，费用直接向 AI 厂商（如 OpenAI、Google 等）支付，我们不收任何 AI 使用抽成。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="billing">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">AI API 费用大概多少？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            以 Google Gemini 为例，有相当充裕的免费额度，日常使用几乎免费。OpenAI GPT-4o 约每百万 Token $2.5 美元；DeepSeek 更便宜，约不到 OpenAI 的 1/10。实际费用视使用量而定。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="billing">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">可以随时取消吗？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            可以。到期不续费，服务自动停止，不会自动扣款。
+          </p>
+        </div>
+      </div>
+
+      <!-- ── TECH ── -->
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="tech">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">我的资料安全吗？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            非常安全。每个用户都有独立的云端主机，资料不会与其他用户共用。你的对话记录只存在你的主机上，我们不会读取你的对话内容。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="tech">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">大闸蟹回应速度怎么样？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            回应速度主要取决于你选择的 AI 模型。如果追求速度，可以选择 Groq（极速推理），一般对话几乎即时回应。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="tech">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">如果 AI 回应出错怎么办？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            可以直接在 Telegram 反映问题，我们会协助排查。常见问题如 API Key 额度不足、网路问题等，大闸蟹会主动告知错误原因。
+          </p>
+        </div>
+      </div>
+
+      <!-- ── TELEGRAM ── -->
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="telegram">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">怎么取得 Telegram Bot Token？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            在 Telegram 搜寻 @BotFather，输入 /newbot，按照指示命名你的 Bot，即可取得 Token（格式：1234567890:ABCdef...）。详细步骤请参考步骤教学页面。
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal border-b border-[#1a1a1a]" data-cat="telegram">
+        <button class="faq-btn w-full flex items-center justify-between gap-4 py-6 text-left">
+          <span class="font-bold text-white text-base leading-snug">一个 Bot Token 可以给多人使用吗？</span>
+          <svg class="faq-chevron flex-shrink-0 w-5 h-5 text-[#E85542]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="faq-body">
+          <p class="text-[#888] leading-relaxed text-sm pb-6 pr-10">
+            不建议。每个 Bot Token 对应一个 Telegram Bot，建议每个帐号使用独立的 Bot，确保对话记忆和资料隔离。如需多人共用，请考虑 Pro 以上方案。
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       STILL HAVE QUESTIONS CTA
+  ════════════════════════════════════════════════ -->
+  <section class="relative z-10 py-24 border-t border-[#1a1a1a]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-12">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+          <div>
+            <p class="text-[#888] text-xs font-bold tracking-[0.2em] uppercase mb-3">SUPPORT</p>
+            <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
+              还有其他<span class="lime">问题</span>吗？
+            </h2>
+            <p class="text-[#888] text-base">
+              直接联系我们，通常 24 小时内回复。
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+            <a href="https://t.me/your_support_handle" target="_blank"
+              class="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#E85542] text-white text-sm font-black hover:bg-[#ef6b5a] transition-colors tracking-tight">
+              💬 联系我们
+            </a>
+            <a href="./index.html#pricing"
+              class="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#E85542] text-white text-sm font-black hover:bg-[#ef6b5a] transition-colors tracking-tight">
+              查看方案 ↗
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ═══════════════════════════════════════════
-     FOOTER
-══════════════════════════════════════════════ -->
-<footer class="border-t border-[#1a1a1a] py-8">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <svg width="111" height="93" viewBox="0 0 111 93" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:22px;width:auto;">
-          <rect x="29" y="23" width="50" height="63" fill="#E63B35"/><rect x="74" y="23" width="5" height="63" fill="#B52C27"/><rect x="91" y="29" width="5" height="8" fill="#B52C27"/><path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/><path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/><rect x="18" y="29" width="8" height="8" fill="#B52C27"/><path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/><rect x="16" y="29" width="8" height="8" fill="#E63B35"/><path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/><rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/><rect x="34" y="86" width="12" height="7" fill="#E63B35"/><rect x="62" y="86" width="12" height="7" fill="#E63B35"/><rect x="40" y="6" width="8" height="17" fill="#E63B35"/><rect x="40" y="6" width="6" height="13" fill="black"/><rect x="41" y="7" width="3" height="7" fill="white"/><rect x="60" y="6" width="8" height="17" fill="#E63B35"/><rect x="60" y="6" width="6" height="13" fill="black"/><rect x="61" y="7" width="3" height="7" fill="white"/>
-        </svg>
-        <span class="text-[#555] text-sm font-bold">大闸蟹</span>
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════ -->
+  <footer class="relative z-10 bg-black text-[#555] py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-10 mb-12">
+
+        <!-- Logo + tagline -->
+        <div class="md:col-span-1">
+          <div class="flex items-center gap-2 mb-4">
+            <svg width="111" height="91" viewBox="0 0 111 91" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;">
+              <rect x="29" y="23" width="50" height="63" fill="#E63B35"/>
+              <rect x="74" y="23" width="5" height="63" fill="#B52C27"/>
+              <rect x="91" y="29" width="5" height="8" fill="#B52C27"/>
+              <rect x="21" y="29" width="5" height="8" fill="#B52C27"/>
+              <path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/>
+              <path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/>
+              <path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/>
+              <rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/>
+              <path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/>
+              <rect width="8" height="8" transform="matrix(-1 0 0 1 22 29)" fill="#E63B35"/>
+              <rect x="14" y="79" width="12" height="7" fill="#E63B35"/>
+              <rect x="14" y="68" width="12" height="7" fill="#E63B35"/>
+              <rect x="14" y="57" width="12" height="7" fill="#E63B35"/>
+              <rect x="82" y="68" width="12" height="7" fill="#E63B35"/>
+              <rect x="82" y="57" width="12" height="7" fill="#E63B35"/>
+              <rect x="82" y="79" width="12" height="7" fill="#E63B35"/>
+              <rect x="7" y="91" width="12" height="7" transform="rotate(-90 7 91)" fill="#E63B35"/>
+              <rect x="7" y="77" width="9" height="7" transform="rotate(-90 7 77)" fill="#E63B35"/>
+              <rect x="7" y="66" width="9" height="7" transform="rotate(-90 7 66)" fill="#E63B35"/>
+              <rect x="94" y="91" width="12" height="7" transform="rotate(-90 94 91)" fill="#E63B35"/>
+              <rect x="94" y="77" width="9" height="7" transform="rotate(-90 94 77)" fill="#E63B35"/>
+              <rect x="94" y="66" width="9" height="7" transform="rotate(-90 94 66)" fill="#E63B35"/>
+              <rect x="40" y="6" width="8" height="17" fill="#E63B35"/>
+              <rect x="40" y="6" width="6" height="13" fill="black"/>
+              <rect x="41" y="7" width="3" height="7" fill="white"/>
+              <rect x="60" y="6" width="8" height="17" fill="#E63B35"/>
+              <rect x="60" y="6" width="6" height="13" fill="black"/>
+              <rect x="61" y="7" width="3" height="7" fill="white"/>
+            </svg>
+            <span class="text-white font-black text-sm tracking-tight" data-i18n="cmp.brand.label">大闸蟹</span>
+          </div>
+          <p class="text-sm leading-relaxed text-[#444]" data-i18n-html="footer.tagline">风浪越大，蟹越贵。<br>你的专属 AI，住在通讯软件里。</p>
+        </div>
+
+        <!-- Col 1 -->
+        <div>
+          <h4 class="text-white font-black text-xs uppercase tracking-[0.2em] mb-5" data-i18n="footer.col1">产品</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="./index.html#features"  class="hover:text-white transition-colors" data-i18n="footer.link.features">功能介绍</a></li>
+            <li><a href="./index.html#pricing"   class="hover:text-white transition-colors" data-i18n="footer.link.pricing">方案价格</a></li>
+            <li><a href="./index.html#compare"   class="hover:text-white transition-colors" data-i18n="footer.link.compare">对比分析</a></li>
+            <li><a href="./index.html#scenarios" class="hover:text-white transition-colors" data-i18n="footer.link.scenarios">使用场景</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 2 -->
+        <div>
+          <h4 class="text-white font-black text-xs uppercase tracking-[0.2em] mb-5" data-i18n="footer.col2">帮助</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="./guide.html"    class="hover:text-white transition-colors" data-i18n="footer.link.guide">使用教程</a></li>
+            <li><a href="./install.html"  class="hover:text-white transition-colors" data-i18n="footer.link.install">安装教程</a></li>
+            <li><a href="./advanced.html" class="hover:text-white transition-colors" data-i18n="footer.link.advanced">高级功能</a></li>
+            <li><a href="./faq.html"      class="text-[#E85542] font-bold" data-i18n="footer.link.faq">常见问题</a></li>
+          </ul>
+        </div>
       </div>
-      <p class="text-[#555] text-sm">© 2026 大闸蟹. All rights reserved.</p>
+
+      <div class="border-t border-[#0d0d0d] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-[#333]" data-i18n="footer.copy">© 2026 大闸蟹. All rights reserved.</p>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
 
-<!-- ═══════════════════════════════════════════
-     JAVASCRIPT
-══════════════════════════════════════════════ -->
-<script>
-  const hamburger = document.getElementById('hamburger-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const overlay = document.getElementById('drawer-overlay');
-  const iconH = document.getElementById('icon-hamburger');
-  const iconC = document.getElementById('icon-close');
-  function openMenu() { mobileMenu.classList.add('open'); overlay.classList.remove('hidden'); iconH.classList.add('hidden'); iconC.classList.remove('hidden'); document.body.style.overflow='hidden'; }
-  function closeMenu() { mobileMenu.classList.remove('open'); overlay.classList.add('hidden'); iconH.classList.remove('hidden'); iconC.classList.add('hidden'); document.body.style.overflow=''; }
-  hamburger.addEventListener('click', () => mobileMenu.classList.contains('open') ? closeMenu() : openMenu());
-  overlay.addEventListener('click', closeMenu);
-  document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMenu));
+  <!-- ═══════════════════════════════════════════
+       JAVASCRIPT
+  ════════════════════════════════════════════════ -->
+  <script>
+    // ── Theme toggle ──────────────────────────────────────────────
+    (function() {
+      const html = document.documentElement;
+      let currentTheme = localStorage.getItem('dzx-theme') || 'dark';
 
-  // FAQ accordion
-  document.querySelectorAll('.faq-item').forEach(item => {
-    const btn = item.querySelector('.faq-btn');
-    const body = item.querySelector('.faq-body');
-    const chevron = item.querySelector('.faq-chevron');
-    btn.addEventListener('click', () => {
-      const isOpen = body.classList.contains('open');
-      document.querySelectorAll('.faq-body').forEach(b => b.classList.remove('open'));
-      document.querySelectorAll('.faq-chevron').forEach(c => c.classList.remove('open'));
-      if (!isOpen) { body.classList.add('open'); chevron && chevron.classList.add('open'); }
-    });
-  });
+      function applyTheme(theme) {
+        currentTheme = theme;
+        html.setAttribute('data-theme', theme);
+        const isLight = theme === 'light';
 
-  // Category filter
-  document.querySelectorAll('.pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      const cat = pill.dataset.cat;
-      document.querySelectorAll('.faq-item').forEach(item => {
-        item.style.display = (!cat || cat === 'all' || item.dataset.cat === cat) ? '' : 'none';
+        // Desktop icons
+        const moonIcon = document.getElementById('icon-moon');
+        const sunIcon  = document.getElementById('icon-sun');
+        if (moonIcon) moonIcon.classList.toggle('hidden', isLight);
+        if (sunIcon)  sunIcon.classList.toggle('hidden', !isLight);
+
+        // Mobile icons + label
+        const moonM  = document.getElementById('icon-moon-mobile');
+        const sunM   = document.getElementById('icon-sun-mobile');
+        const label  = document.getElementById('theme-label-mobile');
+        if (moonM) moonM.classList.toggle('hidden', isLight);
+        if (sunM)  sunM.classList.toggle('hidden', !isLight);
+        if (label) label.textContent = isLight ? '深色模式' : '浅色模式';
+
+        localStorage.setItem('dzx-theme', theme);
+      }
+
+      function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn  = document.getElementById('theme-btn');
+        const btnM = document.getElementById('theme-btn-mobile');
+        if (btn)  btn.addEventListener('click', toggleTheme);
+        if (btnM) btnM.addEventListener('click', toggleTheme);
+        applyTheme(currentTheme); // re-apply after DOM ready to sync icons
       });
-      // close any open accordion on filter change
-      document.querySelectorAll('.faq-body').forEach(b => b.classList.remove('open'));
-      document.querySelectorAll('.faq-chevron').forEach(c => c.classList.remove('open'));
-    });
-  });
 
-  // Scroll reveal
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+      // Apply immediately (before DOM ready) to prevent flash
+      applyTheme(currentTheme);
+    })();
+
+    // ── i18n ────────────────────────────────────────────────────
+    const translations = {
+      zh: {
+        'nav.usecases':'使用场景','nav.features':'功能','nav.pricing':'方案',
+        'nav.guide':'使用教程','nav.advanced':'高级功能','nav.faq':'常见问题',
+        'nav.cta':'查看方案 ↗',
+        'footer.col1':'产品','footer.col2':'帮助',
+        'footer.tagline':'风浪越大，蟹越贵。<br>你的专属 AI，住在通讯软件里。',
+        'footer.link.features':'功能介绍','footer.link.pricing':'方案价格',
+        'footer.link.compare':'对比分析','footer.link.scenarios':'使用场景',
+        'footer.link.guide':'使用教程','footer.link.install':'安装教程',
+        'footer.link.advanced':'高级功能','footer.link.faq':'常见问题',
+        'footer.copy':'© 2026 大闸蟹. All rights reserved.',
+        'cmp.brand.label':'大闸蟹',
+      },
+      en: {
+        'nav.usecases':'Use Cases','nav.features':'Features','nav.pricing':'Pricing',
+        'nav.guide':'Setup Guide','nav.advanced':'Advanced','nav.faq':'FAQ',
+        'nav.cta':'View Plans ↗',
+        'footer.col1':'Product','footer.col2':'Help',
+        'footer.tagline':'The rougher the waters, the higher the price.<br>Your personal AI, living in your messaging app.',
+        'footer.link.features':'Features','footer.link.pricing':'Pricing',
+        'footer.link.compare':'Comparison','footer.link.scenarios':'Use Cases',
+        'footer.link.guide':'Setup Guide','footer.link.install':'Installation',
+        'footer.link.advanced':'Advanced','footer.link.faq':'FAQ',
+        'footer.copy':'© 2026 Da Zha Xie. All rights reserved.',
+        'cmp.brand.label':'Da Zha Xie',
+      }
+    };
+
+    let currentLang = localStorage.getItem('dzx-lang') || 'zh';
+
+    function applyLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('dzx-lang', lang);
+      const t = translations[lang];
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+
+      const nextLabel = lang === 'zh' ? 'EN' : '中';
+      const btn = document.getElementById('lang-btn');
+      const btnM = document.getElementById('lang-btn-mobile');
+      if (btn) btn.textContent = nextLabel;
+      if (btnM) btnM.textContent = nextLabel;
+
+      document.documentElement.lang = lang === 'zh' ? 'zh-HK' : 'en';
+    }
+
+    function toggleLang() {
+      applyLang(currentLang === 'zh' ? 'en' : 'zh');
+    }
+
+    document.getElementById('lang-btn').addEventListener('click', toggleLang);
+    document.getElementById('lang-btn-mobile').addEventListener('click', toggleLang);
+
+    // ── Mobile menu ──────────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const overlay    = document.getElementById('drawer-overlay');
+    const iconOpen   = document.getElementById('icon-hamburger');
+    const iconClose  = document.getElementById('icon-close');
+
+    function openMenu() {
+      mobileMenu.classList.add('open');
+      overlay.classList.remove('hidden');
+      iconOpen.classList.add('hidden');
+      iconClose.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      mobileMenu.classList.remove('open');
+      overlay.classList.add('hidden');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
     });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-</script>
+    overlay.addEventListener('click', closeMenu);
+
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    // ── Scroll reveal ────────────────────────────────────────────
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ── Init ─────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      applyLang(localStorage.getItem('dzx-lang') || 'zh');
+    });
+    applyLang(currentLang);
+
+    // ── Header scroll: transparent → dark, logo slides in ────────
+    (function() {
+      const header = document.querySelector('header');
+      function onScroll() {
+        if (window.scrollY > 60) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll(); // run once on load
+    })();
+
+    // ── Star field canvas ─────────────────────────────────────────
+    (function() {
+      const canvas = document.getElementById('starfield');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      function init() {
+        stars = [];
+        for (let i = 0; i < 220; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.1 + 0.15,
+            base: Math.random() * 0.45 + 0.08,
+            phase: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.6 + 0.2
+          });
+        }
+      }
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const t = Date.now() * 0.001;
+        stars.forEach(s => {
+          const o = s.base + 0.25 * Math.sin(t * s.speed + s.phase);
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,' + Math.max(0.04, Math.min(0.75, o)) + ')';
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      resize(); init(); draw();
+      window.addEventListener('resize', function() { resize(); init(); });
+    })();
+
+    // ── FAQ accordion ─────────────────────────────────────────────
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const btn = item.querySelector('.faq-btn');
+      const body = item.querySelector('.faq-body');
+      const chevron = item.querySelector('.faq-chevron');
+      btn.addEventListener('click', () => {
+        const isOpen = body.classList.contains('open');
+        document.querySelectorAll('.faq-body').forEach(b => b.classList.remove('open'));
+        document.querySelectorAll('.faq-chevron').forEach(c => c.classList.remove('open'));
+        if (!isOpen) { body.classList.add('open'); chevron && chevron.classList.add('open'); }
+      });
+    });
+
+    // ── Category filter ───────────────────────────────────────────
+    document.querySelectorAll('.pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const cat = pill.dataset.cat;
+        document.querySelectorAll('.faq-item').forEach(item => {
+          item.style.display = (!cat || cat === 'all' || item.dataset.cat === cat) ? '' : 'none';
+        });
+        // close any open accordion on filter change
+        document.querySelectorAll('.faq-body').forEach(b => b.classList.remove('open'));
+        document.querySelectorAll('.faq-chevron').forEach(c => c.classList.remove('open'));
+      });
+    });
+  </script>
 </body>
 </html>

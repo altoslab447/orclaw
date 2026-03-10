@@ -1,83 +1,386 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>龙虾进阶功能 — 大闸蟹</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+HK:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <title>高级功能 — 大闸蟹</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦀</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Space Grotesk', 'Noto Sans HK', sans-serif; }
-    :root { --lime: #C8FF00; --orange: #FF4D00; --black: #000; --border: #1a1a1a; --card: #0d0d0d; --gray: #888; }
+    * { font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif; }
+    :root {
+      --lime: #E85542;
+      --orange: #FF6B35;
+      --black: #0b0e14;
+      --dark: #141820;
+      --card: #141820;
+      --border: #1e2433;
+      --gray: #8899aa;
+    }
     html { scroll-behavior: smooth; }
-    body { background: #000; color: #fff; }
-    .lime { color: #C8FF00; }
-    .orange { color: #FF4D00; }
+    body { background: #0b0e14; color: #fff; }
+
+    /* ── Space theme overrides ── */
+    .bg-black { background-color: #0b0e14 !important; }
+    [class*="bg-[#0d0d0d]"] { background-color: #141820 !important; }
+    [class*="bg-[#080808]"] { background-color: #0f1520 !important; }
+    [class*="bg-[#111]"]    { background-color: #161d2a !important; }
+    [class*="border-[#1a1a1a]"] { border-color: #1e2433 !important; }
+    [class*="border-[#222]"]    { border-color: #1e2433 !important; }
+    [class*="border-[#333]"]    { border-color: #263040 !important; }
+
+    /* Nebula glow top-left */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: -200px;
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(232,85,66,0.10) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Rounded cards */
+    .card-hover { border-radius: 12px; overflow: hidden; }
+
+    /* Header: transparent at top, dark + logo on scroll */
+    header {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      transition: background-color 0.4s ease, border-color 0.4s ease;
+    }
+    header.scrolled {
+      background-color: rgba(11, 14, 20, 0.97) !important;
+      border-color: #1e2433 !important;
+    }
+
+    /* Header logo: hidden at top, slides in on scroll */
+    #header-logo {
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+    header.scrolled #header-logo {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    /* bg-black/opacity variants */
+    [class*="bg-black\/"] { background-color: rgba(11, 14, 20, var(--tw-bg-opacity, 0.95)) !important; }
+
+    /* Grid gap dividers */
+    [class*="bg-[#1a1a1a]"] { background-color: #1e2433 !important; }
+
+    /* Utility color classes (for i18n injected HTML) */
+    .lime { color: var(--lime); }
+    .orange { color: var(--orange); }
+
+    /* Marquee */
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+    .marquee-wrap { overflow: hidden; }
+    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+
+    /* Scroll reveal */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Card hover */
     .card-hover { transition: transform 0.2s ease; }
     .card-hover:hover { transform: translateY(-3px); }
+
+    /* Mobile drawer */
     #mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
     #mobile-menu.open { transform: translateX(0); }
-    @keyframes logoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+    /* Chat animation */
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .msg-1 { animation: msgIn 0.4s ease 0.3s both; }
+    .msg-2 { animation: msgIn 0.4s ease 0.7s both; }
+    .msg-3 { animation: msgIn 0.4s ease 1.1s both; }
+    .msg-4 { animation: msgIn 0.4s ease 1.5s both; }
+    .msg-5 { animation: msgIn 0.4s ease 1.9s both; }
+
+    /* Header logo float */
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
     .logo-float { animation: logoFloat 2.8s ease-in-out infinite; }
+
+    /* Compare table zebra */
+    .compare-row:nth-child(even) { background: #0f1520; }
+
+    /* Dot pattern background */
+    .dot-bg {
+      background-image: radial-gradient(circle, #1e2433 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* Provider chip */
+    .provider-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px;
+      background: #141820; font-size: 0.8rem; font-weight: 600; color: #8899aa;
+      border: 1px solid #1e2433; border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .provider-chip:hover { background: #1e2433; color: #fff; }
+
+    /* Marquee brighter on dark navy */
+    .marquee-track span[class*="text-[#333]"] { color: #3a4d63 !important; }
+    .marquee-track span[class*="text-[#222]"] { color: #263040 !important; }
+
+    /* ── Light mode ──────────────────────────────────────────── */
+    html[data-theme="light"] body { background: #f5f4ef !important; color: #111111 !important; }
+    html[data-theme="light"] #starfield { opacity: 0; }
+    html[data-theme="light"] body::before { background: radial-gradient(circle, rgba(232,85,66,0.04) 0%, transparent 65%); }
+    html[data-theme="light"] header.scrolled { background-color: rgba(245,244,239,0.97) !important; border-color: #e2dfd6 !important; }
+
+    /* Backgrounds */
+    html[data-theme="light"] .bg-black { background-color: #f5f4ef !important; }
+    html[data-theme="light"] [class*="bg-[#0d0d0d]"] { background-color: #f0eeea !important; }
+    html[data-theme="light"] [class*="bg-[#080808]"] { background-color: #eeece5 !important; }
+    html[data-theme="light"] [class*="bg-[#111]"]    { background-color: #e8e5dc !important; }
+    html[data-theme="light"] [class*="bg-[#141820]"] { background-color: #f8f6f1 !important; }
+    html[data-theme="light"] [class*="bg-[#0f1520]"] { background-color: #eeece5 !important; }
+    html[data-theme="light"] [class*="bg-[#0b0e14]"] { background-color: #f5f4ef !important; }
+    html[data-theme="light"] [class*="bg-[#1a1a1a]"] { background-color: #e8e5dc !important; }
+    html[data-theme="light"] [class*="bg-[#060606]"] { background-color: #f0eeea !important; }
+    html[data-theme="light"] [class*="bg-[#161d2a]"] { background-color: #2d2d2d !important; }
+    html[data-theme="light"] [class*="bg-black\/"]   { background-color: rgba(245,244,239,0.6) !important; }
+
+    /* Borders */
+    html[data-theme="light"] [class*="border-[#1a1a1a]"] { border-color: #e2dfd6 !important; }
+    html[data-theme="light"] [class*="border-[#222]"]    { border-color: #e2dfd6 !important; }
+    html[data-theme="light"] [class*="border-[#333]"]    { border-color: #d5d2c8 !important; }
+    html[data-theme="light"] [class*="border-[#1e2433]"] { border-color: #e2dfd6 !important; }
+    html[data-theme="light"] [class*="border-[#263040]"] { border-color: #d0cdc4 !important; }
+
+    /* Text */
+    html[data-theme="light"] .text-white               { color: #111111 !important; }
+    html[data-theme="light"] [class*="text-white"]     { color: #111111 !important; }
+    html[data-theme="light"] [class*="text-gray-200"]  { color: #333333 !important; }
+    html[data-theme="light"] [class*="text-[#888]"]    { color: #666666 !important; }
+    html[data-theme="light"] [class*="text-[#8899aa]"] { color: #777777 !important; }
+    html[data-theme="light"] [class*="text-[#aaa]"]    { color: #555555 !important; }
+    html[data-theme="light"] [class*="text-[#666]"]    { color: #888888 !important; }
+    html[data-theme="light"] [class*="text-[#555]"]    { color: #999999 !important; }
+    html[data-theme="light"] [class*="text-[#444]"]    { color: #aaaaaa !important; }
+
+    /* Re-whitelist text ON coral/orange buttons */
+    html[data-theme="light"] [class*="bg-[#E85542]"] .text-white,
+    html[data-theme="light"] [class*="bg-[#E85542]"][class*="text-white"],
+    html[data-theme="light"] [class*="bg-[#ef6b5a]"][class*="text-white"],
+    html[data-theme="light"] [class*="bg-[#FF4D00]"][class*="text-white"] { color: #ffffff !important; }
+
+    /* Dot pattern, compare table, provider chips, marquee */
+    html[data-theme="light"] .dot-bg { background-image: radial-gradient(circle, #d0cdc4 1px, transparent 1px) !important; }
+    html[data-theme="light"] .compare-row:nth-child(even) { background: #eeece5 !important; }
+    html[data-theme="light"] .provider-chip { background: #f0eeea !important; border-color: #e2dfd6 !important; color: #666 !important; }
+    html[data-theme="light"] .provider-chip:hover { background: #e5e2d8 !important; color: #111 !important; }
+    html[data-theme="light"] .marquee-track span[class*="text-[#333]"] { color: #c0bdb4 !important; }
+
+    /* Smooth star canvas fade */
+    #starfield { transition: opacity 0.5s ease; }
+
+    /* Waveform bar animation */
+    @keyframes waveBar {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.4); }
+    }
+    .wave-bar { transform-origin: bottom; }
+    .wave-bar:nth-child(1)  { animation: waveBar 1.2s ease-in-out 0.0s infinite; }
+    .wave-bar:nth-child(2)  { animation: waveBar 1.2s ease-in-out 0.1s infinite; }
+    .wave-bar:nth-child(3)  { animation: waveBar 1.2s ease-in-out 0.2s infinite; }
+    .wave-bar:nth-child(4)  { animation: waveBar 1.2s ease-in-out 0.3s infinite; }
+    .wave-bar:nth-child(5)  { animation: waveBar 1.2s ease-in-out 0.4s infinite; }
+    .wave-bar:nth-child(6)  { animation: waveBar 1.2s ease-in-out 0.5s infinite; }
+    .wave-bar:nth-child(7)  { animation: waveBar 1.2s ease-in-out 0.6s infinite; }
+    .wave-bar:nth-child(8)  { animation: waveBar 1.2s ease-in-out 0.7s infinite; }
+    .wave-bar:nth-child(9)  { animation: waveBar 1.2s ease-in-out 0.15s infinite; }
+    .wave-bar:nth-child(10) { animation: waveBar 1.2s ease-in-out 0.25s infinite; }
+    .wave-bar:nth-child(11) { animation: waveBar 1.2s ease-in-out 0.35s infinite; }
+    .wave-bar:nth-child(12) { animation: waveBar 1.2s ease-in-out 0.45s infinite; }
+    .wave-bar:nth-child(13) { animation: waveBar 1.2s ease-in-out 0.55s infinite; }
+    .wave-bar:nth-child(14) { animation: waveBar 1.2s ease-in-out 0.65s infinite; }
+    .wave-bar:nth-child(15) { animation: waveBar 1.2s ease-in-out 0.75s infinite; }
+    .wave-bar:nth-child(16) { animation: waveBar 1.2s ease-in-out 0.85s infinite; }
+
+    /* Gradient shift text effect (inspired by openclaw) */
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .gradient-shift {
+      background: linear-gradient(135deg, #E85542 0%, #FF4D00 30%, #C8FF00 60%, #E85542 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    /* inline code */
+    code {
+      font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+      font-size: 0.82em;
+      background: #141820;
+      border: 1px solid #1e2433;
+      padding: 0.12em 0.45em;
+      color: #E85542;
+    }
+    html[data-theme="light"] code { background: #f0eeea !important; border-color: #e2dfd6 !important; color: #cc3325 !important; }
+    /* Syntax highlight helpers */
+    .sh-k { color: #E85542; font-weight: 600; }
+    .sh-s { color: #98d982; }
+    .sh-c { color: #8899aa; font-style: italic; }
+    html[data-theme="light"] .sh-s { color: #3a8a2a !important; }
+    html[data-theme="light"] .sh-c { color: #777777 !important; }
   </style>
 </head>
-<body class="bg-black text-white">
+<body class="overflow-x-hidden">
 
-<!-- ═══ HEADER ═══ -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-black/95 border-b border-[#1a1a1a]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-14">
-      <a href="./index.html" class="flex items-center gap-2 select-none tracking-tight">
-        <svg width="111" height="93" viewBox="0 0 111 93" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-float" style="height:38px;width:auto;">
-          <rect x="29" y="23" width="50" height="63" fill="#E63B35"/><rect x="74" y="23" width="5" height="63" fill="#B52C27"/><rect x="91" y="29" width="5" height="8" fill="#B52C27"/><path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/><path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/><rect x="18" y="29" width="8" height="8" fill="#B52C27"/><path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/><rect x="16" y="29" width="8" height="8" fill="#E63B35"/><path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/><rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/><rect x="34" y="86" width="12" height="7" fill="#E63B35"/><rect x="62" y="86" width="12" height="7" fill="#E63B35"/><rect x="40" y="6" width="8" height="17" fill="#E63B35"/><rect x="40" y="6" width="6" height="13" fill="black"/><rect x="41" y="7" width="3" height="7" fill="white"/><rect x="60" y="6" width="8" height="17" fill="#E63B35"/><rect x="60" y="6" width="6" height="13" fill="black"/><rect x="61" y="7" width="3" height="7" fill="white"/>
-        </svg>
-        <span class="text-white font-black text-2xl">大闸蟹</span>
-      </a>
-      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#666]">
-        <a href="./index.html#scenarios" class="hover:text-white transition-colors">使用情境</a>
-        <a href="./index.html#features" class="hover:text-white transition-colors">功能</a>
-        <a href="./index.html#pricing" class="hover:text-white transition-colors">方案</a>
-        <a href="./guide.html" class="hover:text-white transition-colors inline-flex items-center gap-1">步骤教学<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-        <a href="./advanced.html" class="text-white font-bold inline-flex items-center gap-1">进阶功能<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-        <a href="./faq.html" class="hover:text-white transition-colors inline-flex items-center gap-1">常见问题<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-      </nav>
-      <div class="flex items-center gap-3">
-        <a href="./index.html#pricing" class="hidden md:inline-flex items-center gap-1 bg-[#C8FF00] text-black text-sm font-black px-5 py-2 hover:bg-[#d9ff33] transition-colors tracking-tight">查看方案 ↗</a>
-        <button id="hamburger-btn" class="md:hidden p-2" aria-label="Menu">
-          <svg id="icon-hamburger" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-          <svg id="icon-close" class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
+  <canvas id="starfield" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════════════════════════ -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-black/95 border-b border-[#1a1a1a]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+
+        <!-- Logo (hidden at top, appears on scroll) -->
+        <a id="header-logo" href="./index.html" class="flex items-center gap-2 font-bold text-sm select-none tracking-tight">
+          <svg width="111" height="91" viewBox="0 0 111 91" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-float" style="height:38px;width:auto;">
+            <rect x="29" y="23" width="50" height="63" fill="#E63B35"/>
+            <rect x="74" y="23" width="5" height="63" fill="#B52C27"/>
+            <rect x="91" y="29" width="5" height="8" fill="#B52C27"/>
+            <rect x="21" y="29" width="5" height="8" fill="#B52C27"/>
+            <path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/>
+            <path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/>
+            <path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/>
+            <rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/>
+            <path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/>
+            <rect width="8" height="8" transform="matrix(-1 0 0 1 22 29)" fill="#E63B35"/>
+            <rect x="14" y="79" width="12" height="7" fill="#E63B35"/>
+            <rect x="14" y="68" width="12" height="7" fill="#E63B35"/>
+            <rect x="14" y="57" width="12" height="7" fill="#E63B35"/>
+            <rect x="82" y="68" width="12" height="7" fill="#E63B35"/>
+            <rect x="82" y="57" width="12" height="7" fill="#E63B35"/>
+            <rect x="82" y="79" width="12" height="7" fill="#E63B35"/>
+            <rect x="7" y="91" width="12" height="7" transform="rotate(-90 7 91)" fill="#E63B35"/>
+            <rect x="7" y="77" width="9" height="7" transform="rotate(-90 7 77)" fill="#E63B35"/>
+            <rect x="7" y="66" width="9" height="7" transform="rotate(-90 7 66)" fill="#E63B35"/>
+            <rect x="94" y="91" width="12" height="7" transform="rotate(-90 94 91)" fill="#E63B35"/>
+            <rect x="94" y="77" width="9" height="7" transform="rotate(-90 94 77)" fill="#E63B35"/>
+            <rect x="94" y="66" width="9" height="7" transform="rotate(-90 94 66)" fill="#E63B35"/>
+            <rect x="40" y="6" width="8" height="17" fill="#E63B35"/>
+            <rect x="40" y="6" width="6" height="13" fill="black"/>
+            <rect x="41" y="7" width="3" height="7" fill="white"/>
+            <rect x="60" y="6" width="8" height="17" fill="#E63B35"/>
+            <rect x="60" y="6" width="6" height="13" fill="black"/>
+            <rect x="61" y="7" width="3" height="7" fill="white"/>
+          </svg>
+          <span class="text-white font-black text-2xl" data-i18n="cmp.brand.label">大闸蟹</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#666]">
+          <a href="./index.html#scenarios" class="hover:text-white transition-colors" data-i18n="nav.usecases">使用场景</a>
+          <a href="./index.html#features"  class="hover:text-white transition-colors" data-i18n="nav.features">功能</a>
+          <a href="./index.html#pricing"   class="hover:text-white transition-colors" data-i18n="nav.pricing">方案</a>
+          <a href="./guide.html"    class="hover:text-white transition-colors inline-flex items-center gap-1" data-i18n="nav.guide">使用教程<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+          <a href="./advanced.html" class="text-white font-bold inline-flex items-center gap-1" data-i18n="nav.advanced">高级功能<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+          <a href="./faq.html"      class="hover:text-white transition-colors inline-flex items-center gap-1" data-i18n="nav.faq">常见问题<svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+        </nav>
+
+        <!-- Right: Lang + CTA -->
+        <div class="flex items-center gap-3">
+          <button id="lang-btn"
+            class="hidden md:inline-flex items-center px-3 py-1.5 border border-[#333] text-xs font-bold text-[#888] hover:border-white hover:text-white transition-colors tracking-wider">
+            EN
+          </button>
+          <!-- Theme toggle (desktop) -->
+          <button id="theme-btn"
+            class="hidden md:inline-flex items-center justify-center w-8 h-8 border border-[#333] text-[#888] hover:border-white hover:text-white transition-colors"
+            aria-label="Toggle theme">
+            <!-- Moon icon: shown in dark mode -->
+            <svg id="icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+            </svg>
+            <!-- Sun icon: shown in light mode -->
+            <svg id="icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </button>
+          <a href="./index.html#pricing"
+            class="hidden md:inline-flex items-center gap-1 bg-[#E85542] text-white text-sm font-black px-5 py-2 hover:bg-[#ef6b5a] transition-colors tracking-tight"
+            data-i18n="nav.cta">查看方案 ↗</a>
+
+          <!-- Mobile hamburger -->
+          <button id="hamburger-btn" class="md:hidden p-2" aria-label="Menu">
+            <svg id="icon-hamburger" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <svg id="icon-close" class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-menu" class="fixed top-0 right-0 bottom-0 w-72 bg-[#080808] z-40 shadow-2xl flex flex-col pt-20 px-6 pb-8 border-l border-[#1a1a1a]">
+    <nav class="flex flex-col gap-1 text-[#aaa] font-medium text-base">
+      <a href="./index.html#scenarios" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors" data-i18n="nav.usecases">使用场景</a>
+      <a href="./index.html#features"  class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors" data-i18n="nav.features">功能</a>
+      <a href="./index.html#pricing"   class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors" data-i18n="nav.pricing">方案</a>
+      <a href="./guide.html"    class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors flex items-center justify-between" data-i18n="nav.guide">使用教程<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+      <a href="./advanced.html" class="mobile-link py-3 border-b border-[#1a1a1a] text-[#E85542] flex items-center justify-between" data-i18n="nav.advanced">高级功能<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+      <a href="./faq.html"      class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#E85542] transition-colors flex items-center justify-between" data-i18n="nav.faq">常见问题<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+    </nav>
+    <div class="mt-6 flex flex-col gap-3">
+      <button id="lang-btn-mobile"
+        class="w-full py-2.5 border border-[#333] text-sm font-bold text-[#888] hover:border-white hover:text-white transition-colors tracking-wider">
+        EN
+      </button>
+      <!-- Theme toggle (mobile) -->
+      <button id="theme-btn-mobile"
+        class="w-full py-2.5 border border-[#333] text-sm font-bold text-[#888] hover:border-white hover:text-white transition-colors flex items-center justify-center gap-2">
+        <svg id="icon-moon-mobile" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+        </svg>
+        <svg id="icon-sun-mobile" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        <span id="theme-label-mobile">浅色模式</span>
+      </button>
+      <a href="./index.html#pricing"
+        class="mobile-link w-full text-center bg-[#E85542] text-white text-sm font-black px-5 py-3 hover:bg-[#ef6b5a] transition-colors"
+        data-i18n="nav.cta">查看方案 ↗</a>
+    </div>
   </div>
-</header>
-<div id="mobile-menu" class="fixed top-0 right-0 bottom-0 w-72 bg-[#080808] z-40 shadow-2xl flex flex-col pt-20 px-6 pb-8 border-l border-[#1a1a1a]">
-  <nav class="flex flex-col gap-1 text-[#aaa] font-medium text-base">
-    <a href="./index.html#scenarios" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">使用情境</a>
-    <a href="./index.html#features" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">功能</a>
-    <a href="./index.html#pricing" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors">方案</a>
-    <a href="./guide.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors flex items-center justify-between">步骤教学<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-    <a href="./advanced.html" class="mobile-link py-3 border-b border-[#1a1a1a] text-[#C8FF00] flex items-center justify-between">进阶功能<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-    <a href="./faq.html" class="mobile-link py-3 border-b border-[#1a1a1a] hover:text-[#C8FF00] transition-colors flex items-center justify-between">常见问题<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
-  </nav>
-  <div class="mt-6">
-    <a href="./index.html#pricing" class="mobile-link block w-full text-center bg-[#C8FF00] text-black text-sm font-black px-5 py-3 hover:bg-[#d9ff33] transition-colors">查看方案 ↗</a>
-  </div>
-</div>
-<div id="drawer-overlay" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden"></div>
+  <div id="drawer-overlay" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden"></div>
 
 <!-- ═══ HERO ═══ -->
-<section class="pt-32 pb-20 px-4 border-b border-[#1a1a1a]">
+<section class="relative z-10 pt-32 pb-20 px-4 border-b border-[#1a1a1a]">
   <div class="max-w-5xl mx-auto">
     <div class="reveal mb-4">
       <span class="text-xs font-bold tracking-widest uppercase text-[#888] border border-[#1a1a1a] px-3 py-1.5">ADVANCED FEATURES</span>
     </div>
     <h1 class="reveal text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-tight mb-6">
-      龙虾<span class="text-[#C8FF00]">进阶</span>功能
+      大闸蟹<span class="text-[#E85542]">高级</span>功能
     </h1>
     <p class="reveal text-lg text-[#888] max-w-2xl mb-12 leading-relaxed">
       解锁大闸蟹的完整潜能：Session 任务拆分、技能安装与管理
@@ -86,15 +389,15 @@
     <!-- Quick Links -->
     <div class="reveal grid grid-cols-1 sm:grid-cols-3 gap-px border border-[#1a1a1a]">
       <a href="#sessions" class="bg-[#0d0d0d] border-r border-[#1a1a1a] px-6 py-5 flex items-center gap-3 hover:bg-[#111] transition-colors group">
-        <span class="text-[#C8FF00] font-black text-lg">/01</span>
+        <span class="text-[#E85542] font-black text-lg">/01</span>
         <span class="text-[#888] group-hover:text-white transition-colors text-sm font-semibold">Session 任务拆分</span>
       </a>
       <a href="#install-skills" class="bg-[#0d0d0d] border-r border-[#1a1a1a] px-6 py-5 flex items-center gap-3 hover:bg-[#111] transition-colors group">
-        <span class="text-[#C8FF00] font-black text-lg">/02</span>
+        <span class="text-[#E85542] font-black text-lg">/02</span>
         <span class="text-[#888] group-hover:text-white transition-colors text-sm font-semibold">安装 Skills</span>
       </a>
       <a href="#recommended-skills" class="bg-[#0d0d0d] px-6 py-5 flex items-center gap-3 hover:bg-[#111] transition-colors group">
-        <span class="text-[#C8FF00] font-black text-lg">/03</span>
+        <span class="text-[#E85542] font-black text-lg">/03</span>
         <span class="text-[#888] group-hover:text-white transition-colors text-sm font-semibold">推荐 Skills</span>
       </a>
     </div>
@@ -102,17 +405,17 @@
 </section>
 
 <!-- ═══ SECTION 1: SESSIONS ═══ -->
-<section id="sessions" class="py-20 px-4 border-b border-[#1a1a1a]">
+<section id="sessions" class="relative z-10 py-20 px-4 border-b border-[#1a1a1a]">
   <div class="max-w-5xl mx-auto">
 
     <!-- Section label -->
     <div class="reveal flex items-center gap-4 mb-12">
-      <span class="text-[#C8FF00] font-black text-sm tracking-widest">/01</span>
+      <span class="text-[#E85542] font-black text-sm tracking-widest">/01</span>
       <div class="flex-1 h-px bg-[#1a1a1a]"></div>
       <span class="text-xs font-bold tracking-widest uppercase text-[#444]">SESSION MANAGEMENT</span>
     </div>
 
-    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">用 Session 同时处理<span class="text-[#C8FF00]">多件事</span></h2>
+    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">用 Session 同时处理<span class="text-[#E85542]">多件事</span></h2>
     <p class="reveal text-[#888] text-lg max-w-2xl mb-14 leading-relaxed">
       Session 是大闸蟹的核心概念，让你像开多个浏览器分页一样，让 AI 同时处理不同任务。
     </p>
@@ -121,7 +424,7 @@
     <div class="reveal mb-12">
       <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-6 sm:p-8">
         <div class="flex items-start gap-4 mb-8">
-          <div class="w-10 h-10 bg-[#C8FF00] flex items-center justify-center text-black font-black text-base flex-shrink-0">?</div>
+          <div class="w-10 h-10 bg-[#E85542] flex items-center justify-center text-white font-black text-base flex-shrink-0">?</div>
           <div>
             <h3 class="text-xl font-bold text-white mb-1">什么是 Session？</h3>
             <p class="text-[#888]">每个 Session 是一个独立的对话上下文。</p>
@@ -130,13 +433,13 @@
 
         <!-- Session visual diagram -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div class="border border-[#C8FF00]/30 bg-[#C8FF00]/5 p-4 relative">
-            <div class="absolute -top-2.5 left-4 bg-[#C8FF00] text-black text-[10px] font-black px-2 py-0.5">Session A</div>
+          <div class="border border-[#E85542]/30 bg-[#E85542]/5 p-4 relative">
+            <div class="absolute -top-2.5 left-4 bg-[#E85542] text-white text-[10px] font-black px-2 py-0.5">Session A</div>
             <div class="text-sm font-bold text-white mb-1 mt-2">株式监控</div>
             <div class="text-xs text-[#888] mb-3">持续监控 TSLA、2330 即时报价</div>
             <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 bg-[#C8FF00] inline-block animate-pulse"></span>
-              <span class="text-xs text-[#C8FF00] font-bold">Active</span>
+              <span class="w-2 h-2 bg-[#E85542] inline-block animate-pulse"></span>
+              <span class="text-xs text-[#E85542] font-bold">Active</span>
             </div>
           </div>
           <div class="border border-[#1a1a1a] bg-[#0d0d0d] p-4 relative">
@@ -153,8 +456,8 @@
             <div class="text-sm font-bold text-white mb-1 mt-2">资料整理</div>
             <div class="text-xs text-[#888] mb-3">长时间资料分析任务（执行中）</div>
             <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 bg-[#FF4D00] inline-block animate-pulse"></span>
-              <span class="text-xs text-[#FF4D00] font-bold">Running</span>
+              <span class="w-2 h-2 bg-[#FF6B35] inline-block animate-pulse"></span>
+              <span class="text-xs text-[#FF6B35] font-bold">Running</span>
             </div>
           </div>
         </div>
@@ -185,25 +488,25 @@
     <!-- Step 1 -->
     <div class="reveal mb-10">
       <div class="flex items-center gap-4 mb-5">
-        <span class="text-[#C8FF00] font-black text-sm">01</span>
+        <span class="text-[#E85542] font-black text-sm">01</span>
         <h4 class="text-xl font-bold text-white">建立新 Session</h4>
         <div class="flex-1 h-px bg-[#1a1a1a]"></div>
       </div>
       <div class="space-y-4 pl-10">
         <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
           <pre class="text-white m-0">/session new 股票监控</pre>
-          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session new 股票监控">复制</button>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#E85542] transition-colors flex-shrink-0" data-text="/session new 股票监控">复制</button>
         </div>
         <p class="text-[#888] text-sm flex items-center gap-2">
-          <span class="text-[#C8FF00] font-bold">→</span>
+          <span class="text-[#E85542] font-bold">→</span>
           <span>建立一个名为「股票监控」的 Session</span>
         </p>
         <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
           <pre class="text-white m-0">/session new 日常助理</pre>
-          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session new 日常助理">复制</button>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#E85542] transition-colors flex-shrink-0" data-text="/session new 日常助理">复制</button>
         </div>
         <p class="text-[#888] text-sm flex items-center gap-2">
-          <span class="text-[#C8FF00] font-bold">→</span>
+          <span class="text-[#E85542] font-bold">→</span>
           <span>再建立一个「日常助理」Session</span>
         </p>
       </div>
@@ -212,25 +515,25 @@
     <!-- Step 2 -->
     <div class="reveal mb-10">
       <div class="flex items-center gap-4 mb-5">
-        <span class="text-[#C8FF00] font-black text-sm">02</span>
+        <span class="text-[#E85542] font-black text-sm">02</span>
         <h4 class="text-xl font-bold text-white">切换 Session</h4>
         <div class="flex-1 h-px bg-[#1a1a1a]"></div>
       </div>
       <div class="space-y-4 pl-10">
         <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
           <pre class="text-white m-0">/session switch 股票监控</pre>
-          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session switch 股票监控">复制</button>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#E85542] transition-colors flex-shrink-0" data-text="/session switch 股票监控">复制</button>
         </div>
         <p class="text-[#888] text-sm flex items-center gap-2">
-          <span class="text-[#C8FF00] font-bold">→</span>
+          <span class="text-[#E85542] font-bold">→</span>
           <span>切换到「股票监控」Session，之后的对话都在这个 Session 进行</span>
         </p>
         <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
           <pre class="text-white m-0">/session list</pre>
-          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session list">复制</button>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#E85542] transition-colors flex-shrink-0" data-text="/session list">复制</button>
         </div>
         <p class="text-[#888] text-sm flex items-center gap-2">
-          <span class="text-[#C8FF00] font-bold">→</span>
+          <span class="text-[#E85542] font-bold">→</span>
           <span>列出所有 Session 及其状态</span>
         </p>
       </div>
@@ -239,17 +542,17 @@
     <!-- Step 3 -->
     <div class="reveal mb-12">
       <div class="flex items-center gap-4 mb-5">
-        <span class="text-[#C8FF00] font-black text-sm">03</span>
+        <span class="text-[#E85542] font-black text-sm">03</span>
         <h4 class="text-xl font-bold text-white">删除 Session</h4>
         <div class="flex-1 h-px bg-[#1a1a1a]"></div>
       </div>
       <div class="space-y-4 pl-10">
         <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto flex items-center justify-between gap-4">
           <pre class="text-white m-0">/session delete 股票监控</pre>
-          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors flex-shrink-0" data-text="/session delete 股票监控">复制</button>
+          <button class="copy-btn text-[#888] text-xs hover:text-[#E85542] transition-colors flex-shrink-0" data-text="/session delete 股票监控">复制</button>
         </div>
-        <div class="border-l-4 border-[#FF4D00] bg-[#FF4D00]/5 p-4">
-          <p class="text-[#FF4D00] text-sm font-semibold flex items-start gap-2">
+        <div class="border-l-4 border-[#FF6B35] bg-[#FF6B35]/5 p-4">
+          <p class="text-[#FF6B35] text-sm font-semibold flex items-start gap-2">
             <span class="flex-shrink-0 font-black">!</span>
             <span>删除 Session 会同时清除该 Session 的所有对话记忆，无法复原。重要的 Session 请谨慎删除。</span>
           </p>
@@ -264,11 +567,11 @@
 
         <!-- Card 1 -->
         <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
-          <div class="text-[#C8FF00] font-black text-xs tracking-widest mb-4">FINANCE + DAILY</div>
+          <div class="text-[#E85542] font-black text-xs tracking-widest mb-4">FINANCE + DAILY</div>
           <div class="font-black text-lg text-white mb-4">财经监控 + 日常助理分离</div>
           <div class="space-y-2 mb-4">
             <div class="border border-[#1a1a1a] p-3">
-              <div class="text-[10px] font-bold text-[#C8FF00] mb-1 tracking-wider">SESSION "财经"</div>
+              <div class="text-[10px] font-bold text-[#E85542] mb-1 tracking-wider">SESSION "财经"</div>
               <div class="text-xs text-[#888]">设定每日财经早报排程、股票提醒</div>
             </div>
             <div class="border border-[#1a1a1a] p-3">
@@ -276,18 +579,18 @@
               <div class="text-xs text-[#888]">日常问答、翻译、摘要任务</div>
             </div>
           </div>
-          <div class="border-l-2 border-[#C8FF00] pl-3">
-            <div class="text-xs text-[#C8FF00]">两者互不影响，财经排程不会被日常对话打断</div>
+          <div class="border-l-2 border-[#E85542] pl-3">
+            <div class="text-xs text-[#E85542]">两者互不影响，财经排程不会被日常对话打断</div>
           </div>
         </div>
 
         <!-- Card 2 -->
         <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
-          <div class="text-[#C8FF00] font-black text-xs tracking-widest mb-4">LONG TASK + INSTANT</div>
+          <div class="text-[#E85542] font-black text-xs tracking-widest mb-4">LONG TASK + INSTANT</div>
           <div class="font-black text-lg text-white mb-4">长任务 + 即时查询</div>
           <div class="space-y-2 mb-4">
             <div class="border border-[#1a1a1a] p-3">
-              <div class="text-[10px] font-bold text-[#C8FF00] mb-1 tracking-wider">SESSION "长任务"</div>
+              <div class="text-[10px] font-bold text-[#E85542] mb-1 tracking-wider">SESSION "长任务"</div>
               <div class="text-xs text-[#888]">整理大量资料、分析报告（可能需要数分钟）</div>
             </div>
             <div class="border border-[#1a1a1a] p-3">
@@ -295,18 +598,18 @@
               <div class="text-xs text-[#888]">同时进行其他查询，不需等待长任务完成</div>
             </div>
           </div>
-          <div class="border-l-2 border-[#C8FF00] pl-3">
-            <div class="text-xs text-[#C8FF00]">不再卡在等待，多工并行</div>
+          <div class="border-l-2 border-[#E85542] pl-3">
+            <div class="text-xs text-[#E85542]">不再卡在等待，多工并行</div>
           </div>
         </div>
 
         <!-- Card 3 -->
         <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
-          <div class="text-[#C8FF00] font-black text-xs tracking-widest mb-4">MULTI-PROJECT</div>
+          <div class="text-[#E85542] font-black text-xs tracking-widest mb-4">MULTI-PROJECT</div>
           <div class="font-black text-lg text-white mb-4">多专案管理</div>
           <div class="space-y-2 mb-4">
             <div class="border border-[#1a1a1a] p-3">
-              <div class="text-[10px] font-bold text-[#C8FF00] mb-1 tracking-wider">SESSION "专案A"</div>
+              <div class="text-[10px] font-bold text-[#E85542] mb-1 tracking-wider">SESSION "专案A"</div>
               <div class="text-xs text-[#888]">追踪 A 专案相关资料、待办</div>
             </div>
             <div class="border border-[#1a1a1a] p-3">
@@ -314,8 +617,8 @@
               <div class="text-xs text-[#888]">追踪 B 专案，各自有独立记忆</div>
             </div>
           </div>
-          <div class="border-l-2 border-[#C8FF00] pl-3">
-            <div class="text-xs text-[#C8FF00]">就像有多个专属助理，各司其职</div>
+          <div class="border-l-2 border-[#E85542] pl-3">
+            <div class="text-xs text-[#E85542]">就像有多个专属助理，各司其职</div>
           </div>
         </div>
 
@@ -324,26 +627,26 @@
 
     <!-- Tips Box -->
     <div class="reveal">
-      <div class="border-l-4 border-[#C8FF00] bg-[#C8FF00]/5 p-6">
+      <div class="border-l-4 border-[#E85542] bg-[#E85542]/5 p-6">
         <h4 class="font-black text-white mb-4 flex items-center gap-2">
-          <span class="text-[#C8FF00]">→</span>
+          <span class="text-[#E85542]">→</span>
           <span>Session 使用技巧</span>
         </h4>
         <ul class="space-y-3">
           <li class="flex items-start gap-3 text-[#888] text-sm">
-            <span class="text-[#C8FF00] font-black mt-0.5 flex-shrink-0">—</span>
+            <span class="text-[#E85542] font-black mt-0.5 flex-shrink-0">—</span>
             <span>Session 名称建议有意义（用途/专案名），方便记忆</span>
           </li>
           <li class="flex items-start gap-3 text-[#888] text-sm">
-            <span class="text-[#C8FF00] font-black mt-0.5 flex-shrink-0">—</span>
+            <span class="text-[#E85542] font-black mt-0.5 flex-shrink-0">—</span>
             <span>重要 Session 不要随意删除，记忆会一起消失</span>
           </li>
           <li class="flex items-start gap-3 text-[#888] text-sm">
-            <span class="text-[#C8FF00] font-black mt-0.5 flex-shrink-0">—</span>
+            <span class="text-[#E85542] font-black mt-0.5 flex-shrink-0">—</span>
             <span>切换 Session 前可以先 /session list 确认有哪些</span>
           </li>
           <li class="flex items-start gap-3 text-[#888] text-sm">
-            <span class="text-[#C8FF00] font-black mt-0.5 flex-shrink-0">—</span>
+            <span class="text-[#E85542] font-black mt-0.5 flex-shrink-0">—</span>
             <span>排程任务建议放在独立 Session，避免被日常对话干扰</span>
           </li>
         </ul>
@@ -354,16 +657,16 @@
 </section>
 
 <!-- ═══ SECTION 2: INSTALL SKILLS ═══ -->
-<section id="install-skills" class="py-20 px-4 border-b border-[#1a1a1a]">
+<section id="install-skills" class="relative z-10 py-20 px-4 border-b border-[#1a1a1a]">
   <div class="max-w-5xl mx-auto">
 
     <div class="reveal flex items-center gap-4 mb-12">
-      <span class="text-[#C8FF00] font-black text-sm tracking-widest">/02</span>
+      <span class="text-[#E85542] font-black text-sm tracking-widest">/02</span>
       <div class="flex-1 h-px bg-[#1a1a1a]"></div>
       <span class="text-xs font-bold tracking-widest uppercase text-[#444]">SKILL MANAGEMENT</span>
     </div>
 
-    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">透过 <span class="text-[#C8FF00]">ClaWHub</span> 安装技能</h2>
+    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">透过 <span class="text-[#E85542]">ClaWHub</span> 安装技能</h2>
     <p class="reveal text-[#888] text-lg max-w-2xl mb-14 leading-relaxed">
       Skills 是大闸蟹的插件系统，让你无限扩充 AI 的能力。
     </p>
@@ -371,7 +674,7 @@
     <!-- What is ClaWHub -->
     <div class="reveal mb-12">
       <div class="bg-[#0d0d0d] border border-[#1a1a1a] p-6 sm:p-8 flex items-start gap-5">
-        <div class="w-12 h-12 bg-[#C8FF00] flex items-center justify-center text-black font-black text-xl flex-shrink-0">🏪</div>
+        <div class="w-12 h-12 bg-[#E85542] flex items-center justify-center text-white font-black text-xl flex-shrink-0">🏪</div>
         <div>
           <h3 class="text-xl font-bold text-white mb-2">什么是 ClaWHub？</h3>
           <p class="text-[#888] leading-relaxed">
@@ -387,7 +690,7 @@
     <div class="reveal mb-6">
       <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
         <div class="border-b border-[#1a1a1a] px-6 py-4 flex items-center gap-3">
-          <span class="text-[#C8FF00] font-black text-sm w-6">1</span>
+          <span class="text-[#E85542] font-black text-sm w-6">1</span>
           <h4 class="text-white font-bold text-base">直接告诉 AI（最简单）</h4>
         </div>
         <div class="p-6">
@@ -397,7 +700,7 @@
           <div class="bg-black border border-[#1a1a1a] p-5 space-y-4 mb-6 font-mono text-sm">
             <div class="flex items-start gap-3">
               <span class="text-[#888] font-bold flex-shrink-0">你：</span>
-              <span class="text-[#C8FF00]">帮我安装 stock-info-explorer 技能</span>
+              <span class="text-[#E85542]">帮我安装 stock-info-explorer 技能</span>
             </div>
             <div class="flex items-start gap-3">
               <span class="text-[#888] font-bold flex-shrink-0">🦀：</span>
@@ -418,7 +721,7 @@
     <div class="reveal mb-6">
       <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
         <div class="border-b border-[#1a1a1a] px-6 py-4 flex items-center gap-3">
-          <span class="text-[#C8FF00] font-black text-sm w-6">2</span>
+          <span class="text-[#E85542] font-black text-sm w-6">2</span>
           <h4 class="text-white font-bold text-base">直接在伺服器执行指令</h4>
         </div>
         <div class="p-6">
@@ -428,7 +731,7 @@
           <div class="bg-[#0d0d0d] border border-[#1a1a1a] font-mono text-sm p-4 overflow-x-auto mb-6 relative">
             <div class="flex items-center justify-between mb-3">
               <span class="text-[#444] text-xs">bash</span>
-              <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors" data-text="clawhub install SKILL_NAME
+              <button class="copy-btn text-[#888] text-xs hover:text-[#E85542] transition-colors" data-text="clawhub install SKILL_NAME
 clawhub install --force SKILL_NAME
 clawhub remove SKILL_NAME
 clawhub update
@@ -453,9 +756,9 @@ clawhub list
 <span class="text-[#444]"># 搜寻可用技能</span>
 clawhub search KEYWORD</pre>
           </div>
-          <div class="border-l-4 border-[#C8FF00] bg-[#C8FF00]/5 p-4">
+          <div class="border-l-4 border-[#E85542] bg-[#E85542]/5 p-4">
             <p class="text-[#888] text-sm flex items-start gap-2">
-              <span class="text-[#C8FF00] font-black flex-shrink-0">!</span>
+              <span class="text-[#E85542] font-black flex-shrink-0">!</span>
               <span>部分技能需要加上 --force 参数，这是因为 VirusTotal 对某些技能有误判，并非真的有安全问题。</span>
             </p>
           </div>
@@ -465,9 +768,9 @@ clawhub search KEYWORD</pre>
 
     <!-- Method 3 -->
     <div class="reveal">
-      <div class="bg-[#0d0d0d] border border-[#C8FF00]/30 overflow-hidden">
-        <div class="border-b border-[#C8FF00]/20 px-6 py-4 flex items-center gap-3 bg-[#C8FF00]/5">
-          <span class="text-[#C8FF00] font-black text-sm w-6">3</span>
+      <div class="bg-[#0d0d0d] border border-[#E85542]/30 overflow-hidden">
+        <div class="border-b border-[#E85542]/20 px-6 py-4 flex items-center gap-3 bg-[#E85542]/5">
+          <span class="text-[#E85542] font-black text-sm w-6">3</span>
           <h4 class="text-white font-bold text-base">让 AI 自建技能（skill-creator）</h4>
         </div>
         <div class="p-6">
@@ -477,7 +780,7 @@ clawhub search KEYWORD</pre>
           <div class="bg-black border border-[#1a1a1a] p-5 space-y-4 mb-6 font-mono text-sm">
             <div class="flex items-start gap-3">
               <span class="text-[#888] font-bold flex-shrink-0">你：</span>
-              <span class="text-[#C8FF00]">帮我做一个每天爬取 PTT 科技板热帖、整理 5 条重点的技能</span>
+              <span class="text-[#E85542]">帮我做一个每天爬取 PTT 科技板热帖、整理 5 条重点的技能</span>
             </div>
             <div class="flex items-start gap-3">
               <span class="text-[#888] font-bold flex-shrink-0">🦀：</span>
@@ -488,11 +791,11 @@ clawhub search KEYWORD</pre>
             </div>
             <div class="flex items-start gap-3">
               <span class="text-[#888] font-bold flex-shrink-0">🦀：</span>
-              <span class="text-[#C8FF00]">技能「ptt-tech-summary」已安装，每天会自动执行，并将重点摘要传送给你。</span>
+              <span class="text-[#E85542]">技能「ptt-tech-summary」已安装，每天会自动执行，并将重点摘要传送给你。</span>
             </div>
           </div>
-          <div class="border-l-4 border-[#C8FF00] bg-[#C8FF00]/5 p-4">
-            <p class="text-[#C8FF00] text-sm font-semibold flex items-start gap-2">
+          <div class="border-l-4 border-[#E85542] bg-[#E85542]/5 p-4">
+            <p class="text-[#E85542] text-sm font-semibold flex items-start gap-2">
               <span class="flex-shrink-0">✦</span>
               <span>skill-creator 让大闸蟹的能力真正无限。只要你想得到，都可以让它帮你开发。</span>
             </p>
@@ -505,16 +808,16 @@ clawhub search KEYWORD</pre>
 </section>
 
 <!-- ═══ SECTION 3: RECOMMENDED SKILLS ═══ -->
-<section id="recommended-skills" class="py-20 px-4 border-b border-[#1a1a1a]">
+<section id="recommended-skills" class="relative z-10 py-20 px-4 border-b border-[#1a1a1a]">
   <div class="max-w-6xl mx-auto">
 
     <div class="reveal flex items-center gap-4 mb-12">
-      <span class="text-[#C8FF00] font-black text-sm tracking-widest">/03</span>
+      <span class="text-[#E85542] font-black text-sm tracking-widest">/03</span>
       <div class="flex-1 h-px bg-[#1a1a1a]"></div>
       <span class="text-xs font-bold tracking-widest uppercase text-[#444]">RECOMMENDED SKILLS</span>
     </div>
 
-    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">推荐<span class="text-[#C8FF00]">技能</span>清单</h2>
+    <h2 class="reveal text-3xl sm:text-4xl font-black mb-4">推荐<span class="text-[#E85542]">技能</span>清单</h2>
     <p class="reveal text-[#888] text-lg max-w-2xl mb-14 leading-relaxed">
       以下是精选的实用技能，覆盖日常使用的核心需求
     </p>
@@ -537,11 +840,11 @@ clawhub search KEYWORD</pre>
           DuckDuckGo 即时搜寻，不需要任何 API Key。询问最新资讯时自动触发。
         </p>
         <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install ddg-web-search</span>
+          <span class="text-[#E85542]">clawhub install ddg-web-search</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免费</span>
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">无需 API Key</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">免费</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">无需 API Key</span>
           <span class="text-[10px] border border-[#888]/30 text-[#888] px-2 py-0.5 font-semibold">★ 预装推荐</span>
         </div>
       </div>
@@ -561,19 +864,19 @@ clawhub search KEYWORD</pre>
           美股、A股即时报价。支援 TSLA、贵州茅台 (600519)、ETF 等，基于 Yahoo Finance。
         </p>
         <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install --force stock-info-explorer</span>
+          <span class="text-[#E85542]">clawhub install --force stock-info-explorer</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免费</span>
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">即时数据</span>
-          <span class="text-[10px] border border-[#FF4D00]/30 text-[#FF4D00] px-2 py-0.5 font-semibold">需 uv</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">免费</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">即时数据</span>
+          <span class="text-[10px] border border-[#FF6B35]/30 text-[#FF6B35] px-2 py-0.5 font-semibold">需 uv</span>
         </div>
       </div>
 
       <!-- 3. crypto-market-data -->
       <div class="reveal bg-[#0d0d0d] border border-[#1a1a1a] p-5 card-hover">
         <div class="flex items-start gap-3 mb-4">
-          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center font-black text-[#FF4D00] text-lg flex-shrink-0">₿</div>
+          <div class="w-10 h-10 bg-[#1a1a1a] flex items-center justify-center font-black text-[#FF6B35] text-lg flex-shrink-0">₿</div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
               <h4 class="font-black text-white text-sm">crypto-market-data</h4>
@@ -585,11 +888,11 @@ clawhub search KEYWORD</pre>
           主流加密货币即时行情，BTC、ETH、SOL 等，含 24h 涨跌幅。
         </p>
         <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install --force crypto-market-data</span>
+          <span class="text-[#E85542]">clawhub install --force crypto-market-data</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免费</span>
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">即时数据</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">免费</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">即时数据</span>
         </div>
       </div>
 
@@ -608,11 +911,11 @@ clawhub search KEYWORD</pre>
           指定主题的今日新闻摘要，AI 自动搜寻并整理成重点列表。
         </p>
         <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install --force news-summary</span>
+          <span class="text-[#E85542]">clawhub install --force news-summary</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">支援任意主题</span>
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">繁中支援</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">支援任意主题</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">繁中支援</span>
         </div>
       </div>
 
@@ -631,11 +934,11 @@ clawhub search KEYWORD</pre>
           贴入 YouTube 网址，自动撷取字幕并整理重点，省时省力。
         </p>
         <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install youtube-transcript</span>
+          <span class="text-[#E85542]">clawhub install youtube-transcript</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免费</span>
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">支援多语言字幕</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">免费</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">支援多语言字幕</span>
         </div>
       </div>
 
@@ -654,11 +957,11 @@ clawhub search KEYWORD</pre>
           多语言互译，中英日韩等，AI 驱动比传统翻译更自然流畅。
         </p>
         <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install translate</span>
+          <span class="text-[#E85542]">clawhub install translate</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免费</span>
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">AI 驱动</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">免费</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">AI 驱动</span>
         </div>
       </div>
 
@@ -677,11 +980,11 @@ clawhub search KEYWORD</pre>
           长文摘要整理，贴入文章、报告、合约，快速提取重点。
         </p>
         <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install summarize</span>
+          <span class="text-[#E85542]">clawhub install summarize</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免费</span>
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">支援超长文本</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">免费</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">支援超长文本</span>
         </div>
       </div>
 
@@ -700,35 +1003,35 @@ clawhub search KEYWORD</pre>
           全球城市即时天气查询，基于 Open-Meteo，不需要任何 API Key。
         </p>
         <div class="bg-black border border-[#1a1a1a] font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install weather</span>
+          <span class="text-[#E85542]">clawhub install weather</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">免费</span>
-          <span class="text-[10px] border border-[#C8FF00]/30 text-[#C8FF00] px-2 py-0.5 font-semibold">无需 API Key</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">免费</span>
+          <span class="text-[10px] border border-[#E85542]/30 text-[#E85542] px-2 py-0.5 font-semibold">无需 API Key</span>
           <span class="text-[10px] border border-[#888]/30 text-[#888] px-2 py-0.5 font-semibold">★ 预装推荐</span>
         </div>
       </div>
 
       <!-- 9. skill-creator -->
-      <div class="reveal bg-[#0d0d0d] border border-[#C8FF00]/40 p-5 card-hover">
+      <div class="reveal bg-[#0d0d0d] border border-[#E85542]/40 p-5 card-hover">
         <div class="flex items-start gap-3 mb-4">
-          <div class="w-10 h-10 bg-[#C8FF00] flex items-center justify-center text-xl flex-shrink-0">🛠️</div>
+          <div class="w-10 h-10 bg-[#E85542] flex items-center justify-center text-xl flex-shrink-0">🛠️</div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
               <h4 class="font-black text-white text-sm">skill-creator</h4>
-              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#C8FF00]/40 text-[#C8FF00]">进阶</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 border border-[#E85542]/40 text-[#E85542]">进阶</span>
             </div>
           </div>
         </div>
         <p class="text-[#888] text-sm leading-relaxed mb-4">
           让 AI 帮你自动开发新技能。告诉 AI 你的需求，它写程式、测试、安装，一条龙完成。
         </p>
-        <div class="bg-black border border-[#C8FF00]/20 font-mono text-xs p-3 mb-4 overflow-x-auto">
-          <span class="text-[#C8FF00]">clawhub install --force skill-creator</span>
+        <div class="bg-black border border-[#E85542]/20 font-mono text-xs p-3 mb-4 overflow-x-auto">
+          <span class="text-[#E85542]">clawhub install --force skill-creator</span>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] border border-[#C8FF00]/40 text-[#C8FF00] px-2 py-0.5 font-semibold">无限扩充</span>
-          <span class="text-[10px] border border-[#C8FF00]/40 text-[#C8FF00] px-2 py-0.5 font-semibold">自然语言操作</span>
+          <span class="text-[10px] border border-[#E85542]/40 text-[#E85542] px-2 py-0.5 font-semibold">无限扩充</span>
+          <span class="text-[10px] border border-[#E85542]/40 text-[#E85542] px-2 py-0.5 font-semibold">自然语言操作</span>
         </div>
       </div>
 
@@ -739,7 +1042,7 @@ clawhub search KEYWORD</pre>
       <div class="bg-[#0d0d0d] border border-[#1a1a1a] overflow-hidden">
         <div class="px-6 py-4 border-b border-[#1a1a1a] flex items-center justify-between">
           <span class="text-white font-bold text-sm">一次安装所有推荐技能</span>
-          <button class="copy-btn text-[#888] text-xs hover:text-[#C8FF00] transition-colors" data-text="clawhub install ddg-web-search weather summarize translate youtube-transcript
+          <button class="copy-btn text-[#888] text-xs hover:text-[#E85542] transition-colors" data-text="clawhub install ddg-web-search weather summarize translate youtube-transcript
 clawhub install --force skill-creator stock-info-explorer news-summary crypto-market-data">复制全部</button>
         </div>
         <div class="p-6 font-mono text-sm overflow-x-auto">
@@ -754,22 +1057,22 @@ clawhub install --force skill-creator stock-info-explorer news-summary crypto-ma
 </section>
 
 <!-- ═══ CTA ═══ -->
-<section class="py-20 px-4 border-b border-[#1a1a1a]">
+<section class="relative z-10 py-20 px-4 border-b border-[#1a1a1a]">
   <div class="max-w-4xl mx-auto">
     <div class="reveal border border-[#1a1a1a] p-8 sm:p-12">
       <div class="mb-3">
         <span class="text-xs font-bold tracking-widest uppercase text-[#444]">MORE SKILLS</span>
       </div>
       <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">
-        想要<span class="text-[#C8FF00]">更多</span>技能？
+        想要<span class="text-[#E85542]">更多</span>技能？
       </h2>
       <p class="text-[#888] text-lg mb-10 leading-relaxed max-w-xl">
         告诉大闸蟹你的需求，它可以帮你自动开发专属技能
       </p>
       <div class="flex flex-col sm:flex-row gap-4">
         <a href="./guide.html"
-          class="inline-flex items-center justify-center gap-2 bg-[#C8FF00] text-black text-sm font-black px-8 py-4 hover:bg-[#d9ff33] transition-colors tracking-tight">
-          步骤教学 →
+          class="inline-flex items-center justify-center gap-2 bg-[#E85542] text-white text-sm font-black px-8 py-4 hover:bg-[#ef6b5a] transition-colors tracking-tight">
+          使用教程 →
         </a>
         <a href="./faq.html"
           class="inline-flex items-center justify-center gap-2 border border-[#1a1a1a] text-[#888] text-sm font-black px-8 py-4 hover:border-[#888] hover:text-white transition-colors tracking-tight">
@@ -780,86 +1083,315 @@ clawhub install --force skill-creator stock-info-explorer news-summary crypto-ma
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="bg-black border-t border-[#1a1a1a] text-[#888] py-14">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid md:grid-cols-3 gap-10 mb-10">
-      <div class="md:col-span-1">
-        <div class="flex items-center gap-2 mb-4">
-          <svg width="111" height="93" viewBox="0 0 111 93" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;">
-            <rect x="29" y="23" width="50" height="63" fill="#E63B35"/><rect x="74" y="23" width="5" height="63" fill="#B52C27"/><rect x="91" y="29" width="5" height="8" fill="#B52C27"/><path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/><path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/><rect x="18" y="29" width="8" height="8" fill="#B52C27"/><path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/><rect x="16" y="29" width="8" height="8" fill="#E63B35"/><path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/><rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/><rect x="34" y="86" width="12" height="7" fill="#E63B35"/><rect x="62" y="86" width="12" height="7" fill="#E63B35"/><rect x="40" y="6" width="8" height="17" fill="#E63B35"/><rect x="40" y="6" width="6" height="13" fill="black"/><rect x="41" y="7" width="3" height="7" fill="white"/><rect x="60" y="6" width="8" height="17" fill="#E63B35"/><rect x="60" y="6" width="6" height="13" fill="black"/><rect x="61" y="7" width="3" height="7" fill="white"/>
-          </svg>
-          <span class="text-white font-black text-lg">大闸蟹</span>
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════════════ -->
+  <footer class="relative z-10 bg-black text-[#555] py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-10 mb-12">
+
+        <!-- Logo + tagline -->
+        <div class="md:col-span-1">
+          <div class="flex items-center gap-2 mb-4">
+            <svg width="111" height="91" viewBox="0 0 111 91" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;">
+              <rect x="29" y="23" width="50" height="63" fill="#E63B35"/>
+              <rect x="74" y="23" width="5" height="63" fill="#B52C27"/>
+              <rect x="91" y="29" width="5" height="8" fill="#B52C27"/>
+              <rect x="21" y="29" width="5" height="8" fill="#B52C27"/>
+              <path d="M19 9H23C24.6569 9 26 10.3431 26 12V26H19V9Z" fill="#B52C27"/>
+              <path d="M111 8C111 3.58172 107.418 0 103 0H99V26H105C108.314 26 111 23.3137 111 20V8Z" fill="#B52C27"/>
+              <path d="M12 17H17V9H21C22.6569 9 24 10.3431 24 12V26H6C2.68629 26 1.61069e-08 23.3137 0 20V8C0 3.58172 3.58172 1.28851e-07 8 0H12V17Z" fill="#E63B35"/>
+              <rect width="8" height="8" transform="matrix(-1 0 0 1 92 29)" fill="#E63B35"/>
+              <path d="M100 0C104.418 1.28851e-07 108 3.58172 108 8V20C108 23.3137 105.314 26 102 26H84V12C84 10.3431 85.3431 9 87 9H91V17H96V0H100Z" fill="#E63B35"/>
+              <rect width="8" height="8" transform="matrix(-1 0 0 1 22 29)" fill="#E63B35"/>
+              <rect x="14" y="79" width="12" height="7" fill="#E63B35"/>
+              <rect x="14" y="68" width="12" height="7" fill="#E63B35"/>
+              <rect x="14" y="57" width="12" height="7" fill="#E63B35"/>
+              <rect x="82" y="68" width="12" height="7" fill="#E63B35"/>
+              <rect x="82" y="57" width="12" height="7" fill="#E63B35"/>
+              <rect x="82" y="79" width="12" height="7" fill="#E63B35"/>
+              <rect x="7" y="91" width="12" height="7" transform="rotate(-90 7 91)" fill="#E63B35"/>
+              <rect x="7" y="77" width="9" height="7" transform="rotate(-90 7 77)" fill="#E63B35"/>
+              <rect x="7" y="66" width="9" height="7" transform="rotate(-90 7 66)" fill="#E63B35"/>
+              <rect x="94" y="91" width="12" height="7" transform="rotate(-90 94 91)" fill="#E63B35"/>
+              <rect x="94" y="77" width="9" height="7" transform="rotate(-90 94 77)" fill="#E63B35"/>
+              <rect x="94" y="66" width="9" height="7" transform="rotate(-90 94 66)" fill="#E63B35"/>
+              <rect x="40" y="6" width="8" height="17" fill="#E63B35"/>
+              <rect x="40" y="6" width="6" height="13" fill="black"/>
+              <rect x="41" y="7" width="3" height="7" fill="white"/>
+              <rect x="60" y="6" width="8" height="17" fill="#E63B35"/>
+              <rect x="60" y="6" width="6" height="13" fill="black"/>
+              <rect x="61" y="7" width="3" height="7" fill="white"/>
+            </svg>
+            <span class="text-white font-black text-sm tracking-tight" data-i18n="cmp.brand.label">大闸蟹</span>
+          </div>
+          <p class="text-sm leading-relaxed text-[#444]" data-i18n-html="footer.tagline">风浪越大，蟹越贵。<br>你的专属 AI，住在通讯软件里。</p>
         </div>
-        <p class="text-sm leading-relaxed text-[#444]">风浪越大，蟹越贵。<br>你的专属 AI，住在 Telegram 里。</p>
+
+        <!-- Col 1 -->
+        <div>
+          <h4 class="text-white font-black text-xs uppercase tracking-[0.2em] mb-5" data-i18n="footer.col1">产品</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="./index.html#features"  class="hover:text-white transition-colors" data-i18n="footer.link.features">功能介绍</a></li>
+            <li><a href="./index.html#pricing"   class="hover:text-white transition-colors" data-i18n="footer.link.pricing">方案价格</a></li>
+            <li><a href="./index.html#compare"   class="hover:text-white transition-colors" data-i18n="footer.link.compare">对比分析</a></li>
+            <li><a href="./index.html#scenarios" class="hover:text-white transition-colors" data-i18n="footer.link.scenarios">使用场景</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 2 -->
+        <div>
+          <h4 class="text-white font-black text-xs uppercase tracking-[0.2em] mb-5" data-i18n="footer.col2">帮助</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="./guide.html"    class="hover:text-white transition-colors" data-i18n="footer.link.guide">使用教程</a></li>
+            <li><a href="./install.html"  class="hover:text-white transition-colors" data-i18n="footer.link.install">安装教程</a></li>
+            <li><a href="./advanced.html" class="text-[#E85542] font-bold" data-i18n="footer.link.advanced">高级功能</a></li>
+            <li><a href="./faq.html"      class="hover:text-white transition-colors" data-i18n="footer.link.faq">常见问题</a></li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h4 class="text-white font-bold text-xs tracking-widest uppercase mb-5">产品</h4>
-        <ul class="space-y-3 text-sm">
-          <li><a href="./index.html#features" class="hover:text-white transition-colors">功能介绍</a></li>
-          <li><a href="./index.html#pricing" class="hover:text-white transition-colors">方案价格</a></li>
-          <li><a href="./index.html#compare" class="hover:text-white transition-colors">对比分析</a></li>
-          <li><a href="./index.html#scenarios" class="hover:text-white transition-colors">使用情境</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-white font-bold text-xs tracking-widest uppercase mb-5">帮助</h4>
-        <ul class="space-y-3 text-sm">
-          <li><a href="./guide.html" class="hover:text-white transition-colors">步骤教学</a></li>
-          <li><a href="./advanced.html" class="text-white transition-colors">进阶功能</a></li>
-          <li><a href="./faq.html" class="hover:text-white transition-colors">常见问题</a></li>
-        </ul>
+
+      <div class="border-t border-[#0d0d0d] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-[#333]" data-i18n="footer.copy">© 2026 大闸蟹. All rights reserved.</p>
       </div>
     </div>
-    <div class="border-t border-[#1a1a1a] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="text-sm text-[#444]">© 2026 大闸蟹. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+  </footer>
 
-<script>
-  const hamburger = document.getElementById('hamburger-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const overlay = document.getElementById('drawer-overlay');
-  const iconH = document.getElementById('icon-hamburger');
-  const iconC = document.getElementById('icon-close');
-  function openMenu() { mobileMenu.classList.add('open'); overlay.classList.remove('hidden'); iconH.classList.add('hidden'); iconC.classList.remove('hidden'); document.body.style.overflow='hidden'; }
-  function closeMenu() { mobileMenu.classList.remove('open'); overlay.classList.add('hidden'); iconH.classList.remove('hidden'); iconC.classList.add('hidden'); document.body.style.overflow=''; }
-  hamburger.addEventListener('click', () => mobileMenu.classList.contains('open') ? closeMenu() : openMenu());
-  overlay.addEventListener('click', closeMenu);
-  document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMenu));
+  <script>
+    // ── Theme toggle ──────────────────────────────────────────────
+    (function() {
+      const html = document.documentElement;
+      let currentTheme = localStorage.getItem('dzx-theme') || 'dark';
 
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+      function applyTheme(theme) {
+        currentTheme = theme;
+        html.setAttribute('data-theme', theme);
+        const isLight = theme === 'light';
 
-  document.querySelectorAll('.copy-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const text = btn.dataset.text || (() => {
-        const pre = btn.closest('.bg-\\[\\#0d0d0d\\], .bg-black')?.querySelector('pre');
-        return pre ? pre.innerText : '';
-      })();
-      navigator.clipboard.writeText(text).then(() => {
-        const orig = btn.textContent;
-        btn.textContent = '已复制 ✓';
-        btn.style.color = '#C8FF00';
-        setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
-      }).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        const orig = btn.textContent;
-        btn.textContent = '已复制 ✓';
-        btn.style.color = '#C8FF00';
-        setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+        // Desktop icons
+        const moonIcon = document.getElementById('icon-moon');
+        const sunIcon  = document.getElementById('icon-sun');
+        if (moonIcon) moonIcon.classList.toggle('hidden', isLight);
+        if (sunIcon)  sunIcon.classList.toggle('hidden', !isLight);
+
+        // Mobile icons + label
+        const moonM  = document.getElementById('icon-moon-mobile');
+        const sunM   = document.getElementById('icon-sun-mobile');
+        const label  = document.getElementById('theme-label-mobile');
+        if (moonM) moonM.classList.toggle('hidden', isLight);
+        if (sunM)  sunM.classList.toggle('hidden', !isLight);
+        if (label) label.textContent = isLight ? '深色模式' : '浅色模式';
+
+        localStorage.setItem('dzx-theme', theme);
+      }
+
+      function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn  = document.getElementById('theme-btn');
+        const btnM = document.getElementById('theme-btn-mobile');
+        if (btn)  btn.addEventListener('click', toggleTheme);
+        if (btnM) btnM.addEventListener('click', toggleTheme);
+        applyTheme(currentTheme); // re-apply after DOM ready to sync icons
+      });
+
+      // Apply immediately (before DOM ready) to prevent flash
+      applyTheme(currentTheme);
+    })();
+
+    // ── i18n ────────────────────────────────────────────────────
+    const translations = {
+      zh: {
+        'nav.usecases':'使用场景','nav.features':'功能','nav.pricing':'方案',
+        'nav.guide':'使用教程','nav.advanced':'高级功能','nav.faq':'常见问题',
+        'nav.cta':'查看方案 ↗',
+        'footer.col1':'产品','footer.col2':'帮助',
+        'footer.tagline':'风浪越大，蟹越贵。<br>你的专属 AI，住在通讯软件里。',
+        'footer.link.features':'功能介绍','footer.link.pricing':'方案价格',
+        'footer.link.compare':'对比分析','footer.link.scenarios':'使用场景',
+        'footer.link.guide':'使用教程','footer.link.install':'安装教程',
+        'footer.link.advanced':'高级功能','footer.link.faq':'常见问题',
+        'footer.copy':'© 2026 大闸蟹. All rights reserved.',
+        'cmp.brand.label':'大闸蟹',
+      },
+      en: {
+        'nav.usecases':'Use Cases','nav.features':'Features','nav.pricing':'Pricing',
+        'nav.guide':'Setup Guide','nav.advanced':'Advanced','nav.faq':'FAQ',
+        'nav.cta':'View Plans ↗',
+        'footer.col1':'Product','footer.col2':'Help',
+        'footer.tagline':'The rougher the waters, the higher the price.<br>Your personal AI, living in your messaging app.',
+        'footer.link.features':'Features','footer.link.pricing':'Pricing',
+        'footer.link.compare':'Comparison','footer.link.scenarios':'Use Cases',
+        'footer.link.guide':'Setup Guide','footer.link.install':'Installation',
+        'footer.link.advanced':'Advanced','footer.link.faq':'FAQ',
+        'footer.copy':'© 2026 Da Zha Xie. All rights reserved.',
+        'cmp.brand.label':'Da Zha Xie',
+      }
+    };
+
+    let currentLang = localStorage.getItem('dzx-lang') || 'zh';
+
+    function applyLang(lang) {
+      currentLang = lang;
+      const t = translations[lang] || translations.zh;
+
+      // data-i18n (text content)
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+
+      // data-i18n-html (innerHTML)
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+
+      // Lang button labels
+      const langBtn = document.getElementById('lang-btn');
+      const langBtnM = document.getElementById('lang-btn-mobile');
+      if (langBtn)  langBtn.textContent  = lang === 'zh' ? 'EN' : '中';
+      if (langBtnM) langBtnM.textContent = lang === 'zh' ? 'EN' : '中';
+
+      localStorage.setItem('dzx-lang', lang);
+    }
+
+    function toggleLang() {
+      applyLang(currentLang === 'zh' ? 'en' : 'zh');
+    }
+
+    document.getElementById('lang-btn').addEventListener('click', toggleLang);
+    document.getElementById('lang-btn-mobile').addEventListener('click', toggleLang);
+
+    // ── Mobile menu ──────────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const overlay    = document.getElementById('drawer-overlay');
+    const iconOpen   = document.getElementById('icon-hamburger');
+    const iconClose  = document.getElementById('icon-close');
+
+    function openMenu() {
+      mobileMenu.classList.add('open');
+      overlay.classList.remove('hidden');
+      iconOpen.classList.add('hidden');
+      iconClose.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      mobileMenu.classList.remove('open');
+      overlay.classList.add('hidden');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+    });
+    overlay.addEventListener('click', closeMenu);
+
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    // ── Scroll reveal ────────────────────────────────────────────
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ── Init ─────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      applyLang(localStorage.getItem('dzx-lang') || 'zh');
+    });
+    applyLang(currentLang);
+
+    // ── Header scroll: transparent → dark, logo slides in ────────
+    (function() {
+      const header = document.querySelector('header');
+      function onScroll() {
+        if (window.scrollY > 60) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll(); // run once on load
+    })();
+
+    // ── Star field canvas ─────────────────────────────────────────
+    (function() {
+      const canvas = document.getElementById('starfield');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      function init() {
+        stars = [];
+        for (let i = 0; i < 220; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.1 + 0.15,
+            base: Math.random() * 0.45 + 0.08,
+            phase: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.6 + 0.2
+          });
+        }
+      }
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const t = Date.now() * 0.001;
+        stars.forEach(s => {
+          const o = s.base + 0.25 * Math.sin(t * s.speed + s.phase);
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,' + Math.max(0.04, Math.min(0.75, o)) + ')';
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      resize(); init(); draw();
+      window.addEventListener('resize', function() { resize(); init(); });
+    })();
+
+    // ── Copy buttons ─────────────────────────────────────────────
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.dataset.text || (() => {
+          const pre = btn.closest('.bg-\\[\\#0d0d0d\\], .bg-black')?.querySelector('pre');
+          return pre ? pre.innerText : '';
+        })();
+        navigator.clipboard.writeText(text).then(() => {
+          const orig = btn.textContent;
+          btn.textContent = '已复制 ✓';
+          btn.style.color = '#E85542';
+          setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+        }).catch(() => {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          const orig = btn.textContent;
+          btn.textContent = '已复制 ✓';
+          btn.style.color = '#E85542';
+          setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+        });
       });
     });
-  });
-</script>
+  </script>
 
 </body>
 </html>
